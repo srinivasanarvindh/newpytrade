@@ -1,0 +1,52 @@
+.indicator-card {
+  @apply bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden;
+}
+
+.indicator-header {
+  @apply flex justify-between items-center p-3 border-b border-gray-200;
+}
+
+.indicator-title {
+  @apply flex flex-col;
+
+  h3 {
+    @apply text-base font-medium text-gray-800;
+  }
+}
+
+.indicator-values {
+  @apply flex gap-3 mt-1 flex-wrap;
+}
+
+.current-value, .signal-value, .histogram-value {
+  @apply text-sm font-medium flex items-center;
+}
+
+.value-label {
+  @apply text-xs text-gray-500 mr-1;
+}
+
+.value-bullish {
+  @apply text-success;
+}
+
+.value-bearish {
+  @apply text-error;
+}
+
+.value-neutral {
+  @apply text-gray-700;
+}
+
+.indicator-info {
+  @apply text-gray-500;
+}
+
+.indicator-chart {
+  @apply p-3 h-full;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}

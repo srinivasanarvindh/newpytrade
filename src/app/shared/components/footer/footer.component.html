@@ -1,0 +1,110 @@
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-section company-section">
+      <div class="logo-section">
+        <h3>PyTrade</h3>
+        <p>AI-powered platform for comprehensive stock market analysis and trading insights.</p>
+      </div>
+      <div class="social-links">
+        <a href="#" target="_blank" aria-label="Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="#" target="_blank" aria-label="LinkedIn">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="#" target="_blank" aria-label="Github">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="#" target="_blank" aria-label="Discord">
+          <i class="fab fa-discord"></i>
+        </a>
+      </div>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Markets</h3>
+      <ul>
+        <li><a [routerLink]="['/market-overview']" routerLinkActive="active">Market Overview</a></li>
+        <li><a [routerLink]="['/indices']" routerLinkActive="active">Global Indices</a></li>
+        <li><a [routerLink]="['/stocks']" routerLinkActive="active">Stock Directory</a></li>
+        <li><a [routerLink]="['/sectors']" routerLinkActive="active">Sector Analysis</a></li>
+        <li><a [routerLink]="['/news']" routerLinkActive="active">Market News</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Trading Tools</h3>
+      <ul>
+        <li><a [routerLink]="['/screener']" routerLinkActive="active">Stock Screener</a></li>
+        <li><a [routerLink]="['/watchlist']" routerLinkActive="active">Watchlist</a></li>
+        <li><a [routerLink]="['/portfolio']" routerLinkActive="active">Portfolio Tracker</a></li>
+        <li><a [routerLink]="['/sentiment']" routerLinkActive="active">Market Sentiment</a></li>
+        <li><a [routerLink]="['/alerts']" routerLinkActive="active">Price Alerts</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Trading Strategies</h3>
+      <ul>
+        <li><a [routerLink]="['/strategies/intraday']" routerLinkActive="active">Intraday Trading</a></li>
+        <li><a [routerLink]="['/strategies/swing']" routerLinkActive="active">Swing Trading</a></li>
+        <li><a [routerLink]="['/strategies/positional']" routerLinkActive="active">Positional Trading</a></li>
+        <li><a [routerLink]="['/strategies/options']" routerLinkActive="active">Options Trading</a></li>
+        <li><a [routerLink]="['/strategies/ai']" routerLinkActive="active">AI-Powered Strategies</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Resources</h3>
+      <ul>
+        <li><a [routerLink]="['/learning']" routerLinkActive="active">Learning Center</a></li>
+        <li><a [routerLink]="['/api']" routerLinkActive="active">API Documentation</a></li>
+        <li><a [routerLink]="['/help']" routerLinkActive="active">Help & Support</a></li>
+        <li><a [routerLink]="['/academy']" routerLinkActive="active">Trading Academy</a></li>
+        <li><a [routerLink]="['/blog']" routerLinkActive="active">Market Blog</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="footer-middle">
+    <div class="footer-container">
+      <div class="newsletter">
+        <h4>Stay Updated</h4>
+        <p>Subscribe to our newsletter for trading insights and market updates.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Enter your email" aria-label="Email address">
+          <button type="button">Subscribe</button>
+        </div>
+      </div>
+      
+      <div class="apps">
+        <h4>Mobile Apps</h4>
+        <div class="app-buttons">
+          <a href="#" class="app-button">
+            <i class="fab fa-apple"></i>
+            <span>App Store</span>
+          </a>
+          <a href="#" class="app-button">
+            <i class="fab fa-google-play"></i>
+            <span>Google Play</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="copyright">
+        &copy; {{ currentYear }} PyTrade. All rights reserved.
+      </div>
+      <div class="footer-links">
+        <a [routerLink]="['/terms']" routerLinkActive="active">Terms of Service</a>
+        <a [routerLink]="['/privacy']" routerLinkActive="active">Privacy Policy</a>
+        <a [routerLink]="['/disclaimer']" routerLinkActive="active">Disclaimer</a>
+        <a [routerLink]="['/cookies']" routerLinkActive="active">Cookie Policy</a>
+        <a [routerLink]="['/security']" routerLinkActive="active">Security</a>
+      </div>
+    </div>
+  </div>
+</footer>

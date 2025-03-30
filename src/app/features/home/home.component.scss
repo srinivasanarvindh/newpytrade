@@ -1,0 +1,59 @@
+.home-container {
+  @apply max-w-7xl mx-auto;
+}
+
+.hero-section {
+  background-image: linear-gradient(135deg, #1A73E8 0%, #3F51B5 100%);
+}
+
+.btn-primary {
+  @apply bg-primary hover:bg-primary-dark text-white font-medium py-2 px-6 rounded-lg shadow transition-colors duration-200;
+}
+
+.btn-outline {
+  @apply border border-primary text-primary hover:bg-gray-50 font-medium py-2 px-6 rounded-lg shadow transition-colors duration-200;
+}
+
+.trading-card {
+  @apply transition-all duration-300 hover:shadow-md;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* Category tabs styling */
+.category-tabs {
+  button {
+    @apply transition-all duration-200 ease-in-out;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* Top selling stocks table styling */
+.top-selling-stocks {
+  table {
+    thead th {
+      @apply bg-gray-50 text-gray-600 font-medium;
+    }
+    
+    tbody tr {
+      @apply cursor-pointer;
+      
+      &:hover {
+        @apply bg-gray-50;
+        
+        button {
+          @apply opacity-100;
+        }
+      }
+      
+      button {
+        @apply opacity-70 transition-opacity;
+      }
+    }
+  }
+}

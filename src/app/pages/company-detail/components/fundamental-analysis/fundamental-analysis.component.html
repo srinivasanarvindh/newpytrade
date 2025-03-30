@@ -1,0 +1,310 @@
+<div class="fundamental-analysis-container">
+  <div class="section-header">
+    <h2>Fundamental Analysis</h2>
+    <div class="section-description">
+      Comprehensive analysis of financial metrics, growth potential, and company health.
+    </div>
+  </div>
+  
+  <ng-container *ngIf="fundamentalData; else noData">
+    <!-- Overall Rating Card -->
+    <div class="overall-rating-card">
+      <div class="rating-score-section">
+        <div class="rating-dial">
+          <div class="dial-container">
+            <div class="dial-circle">
+              <div class="dial-value">{{ overallRating.score }}</div>
+              <div class="dial-label">Score</div>
+            </div>
+          </div>
+          <div class="dial-meter">
+            <div class="dial-fill" [style.width.%]="overallRating.score" [ngClass]="overallRating.interpretation | lowercase"></div>
+          </div>
+        </div>
+        <div class="rating-interpretation">
+          <div class="interpretation-label">Rating:</div>
+          <div class="interpretation-value" [ngClass]="overallRating.interpretation | lowercase">{{ overallRating.interpretation }}</div>
+          <div class="interpretation-desc">{{ overallRating.description }}</div>
+        </div>
+      </div>
+      
+      <div class="rating-categories">
+        <div class="category-item">
+          <div class="category-label">Valuation</div>
+          <div class="category-value" [ngClass]="valuationStatus | lowercase">{{ valuationStatus }}</div>
+        </div>
+        <div class="category-item">
+          <div class="category-label">Growth</div>
+          <div class="category-value" [ngClass]="growthStatus | lowercase">{{ growthStatus }}</div>
+        </div>
+        <div class="category-item">
+          <div class="category-label">Financial Health</div>
+          <div class="category-value" [ngClass]="financialHealthStatus | lowercase">{{ financialHealthStatus }}</div>
+        </div>
+        <div class="category-item">
+          <div class="category-label">Profitability</div>
+          <div class="category-value" [ngClass]="profitabilityStatus | lowercase">{{ profitabilityStatus }}</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Fundamental Metrics -->
+    <ng-container *ngFor="let category of metricInterpretations">
+      <div class="metrics-card">
+        <h3 class="metrics-category">{{ category.category }}</h3>
+        
+        <div class="metrics-grid">
+          <div class="metric-item" *ngFor="let metric of category.metrics">
+            <div class="metric-header">
+              <div class="metric-name">{{ metric.name }}</div>
+              <div class="metric-status" [ngClass]="metric.status" *ngIf="metric.status !== 'unknown'">
+                <svg *ngIf="metric.status === 'positive'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <svg *ngIf="metric.status === 'negative'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <svg *ngIf="metric.status === 'neutral'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </div>
+            </div>
+            
+            <div class="metric-value" *ngIf="metric.value !== null && metric.value !== undefined">
+              <ng-container [ngSwitch]="metric.name">
+                <ng-container *ngSwitchCase="'P/E Ratio'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Price-to-Book Ratio'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Price-to-Sales Ratio'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'PEG Ratio'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'EV/EBITDA'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Revenue Growth'">{{ metric.value | percent:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Earnings Growth (YoY)'">{{ metric.value | percent:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'ROE'">{{ metric.value | percent:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'ROA'">{{ metric.value | percent:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Debt-to-Equity Ratio'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Current Ratio'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Quick Ratio'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Interest Coverage'">{{ metric.value | number:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Gross Margin'">{{ metric.value | percent:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Operating Margin'">{{ metric.value | percent:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'Net Margin'">{{ metric.value | percent:'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchCase="'EPS'">{{ metric.value | currency:'USD':'symbol':'1.2-2' }}</ng-container>
+                <ng-container *ngSwitchDefault>{{ metric.value | number:'1.2-2' }}</ng-container>
+              </ng-container>
+            </div>
+            <div class="metric-value not-available" *ngIf="metric.value === null || metric.value === undefined">N/A</div>
+            
+            <div class="metric-interpretation">{{ metric.interpretation }}</div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    
+    <!-- Financial Statements Summary -->
+    <div class="financial-statements-card" *ngIf="fundamentalData.faDetailedInfo">
+      <h3>Financial Statements Highlights</h3>
+      
+      <div class="statements-tabs">
+        <div class="tab-buttons">
+          <button class="tab-btn active">Balance Sheet</button>
+          <button class="tab-btn">Income Statement</button>
+          <button class="tab-btn">Cash Flow</button>
+        </div>
+        
+        <div class="tab-content active">
+          <div class="financial-data-grid">
+            <div class="data-group">
+              <h4>Assets</h4>
+              <div class="data-item">
+                <div class="data-label">Total Assets</div>
+                <div class="data-value">{{ fundamentalData.faDetailedInfo.balanceSheetInformation.totalAssets | currency:'USD':'symbol':'1.0-0' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Current Assets</div>
+                <div class="data-value">{{ fundamentalData.faDetailedInfo.balanceSheetInformation.currentAssets | currency:'USD':'symbol':'1.0-0' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Inventory</div>
+                <div class="data-value">{{ fundamentalData.faDetailedInfo.balanceSheetInformation.inventory | currency:'USD':'symbol':'1.0-0' }}</div>
+              </div>
+            </div>
+            
+            <div class="data-group">
+              <h4>Liabilities</h4>
+              <div class="data-item">
+                <div class="data-label">Total Liabilities</div>
+                <div class="data-value">{{ fundamentalData.faDetailedInfo.balanceSheetInformation.totalLiabilities | currency:'USD':'symbol':'1.0-0' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Current Liabilities</div>
+                <div class="data-value">{{ fundamentalData.faDetailedInfo.balanceSheetInformation.currentLiabilities | currency:'USD':'symbol':'1.0-0' }}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">Long Term Debt</div>
+                <div class="data-value">{{ fundamentalData.faDetailedInfo.balanceSheetInformation.longTermDebt | currency:'USD':'symbol':'1.0-0' }}</div>
+              </div>
+            </div>
+            
+            <div class="data-group">
+              <h4>Equity</h4>
+              <div class="data-item">
+                <div class="data-label">Total Stockholder Equity</div>
+                <div class="data-value">{{ fundamentalData.faDetailedInfo.balanceSheetInformation.totalStockholderEquity | currency:'USD':'symbol':'1.0-0' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Investment Recommendation -->
+    <div class="investment-recommendation-card">
+      <h3>Investment Perspective</h3>
+      
+      <div class="recommendation-content">
+        <div class="recommendation-summary">
+          <div class="recommendation-badge" [ngClass]="overallRating.interpretation | lowercase">{{ overallRating.interpretation }}</div>
+          <div class="recommendation-text">
+            <p>
+              Based on fundamental analysis, this company appears to be 
+              <ng-container [ngSwitch]="overallRating.interpretation">
+                <span *ngSwitchCase="'Strong Buy'" class="highlight positive">a strong buying opportunity</span>
+                <span *ngSwitchCase="'Buy'" class="highlight positive">a good buying opportunity</span>
+                <span *ngSwitchCase="'Neutral'" class="highlight neutral">fairly valued at current levels</span>
+                <span *ngSwitchCase="'Sell'" class="highlight negative">overvalued at current levels</span>
+                <span *ngSwitchCase="'Strong Sell'" class="highlight negative">significantly overvalued with fundamental concerns</span>
+              </ng-container>
+              . The company shows
+              <span class="highlight" [ngClass]="growthStatus | lowercase">{{ growthStatus.toLowerCase() }} growth</span>,
+              <span class="highlight" [ngClass]="financialHealthStatus | lowercase">{{ financialHealthStatus.toLowerCase() }} financial health</span>,
+              and <span class="highlight" [ngClass]="profitabilityStatus | lowercase">{{ profitabilityStatus.toLowerCase() }} profitability</span>.
+            </p>
+            
+            <p class="recommendation-disclaimer">
+              This analysis is based on available financial data and should be considered alongside other factors before making investment decisions.
+            </p>
+          </div>
+        </div>
+        
+        <div class="investor-highlights">
+          <h4>Investor Highlights</h4>
+          
+          <div class="highlights-grid">
+            <div class="highlight-item">
+              <div class="highlight-icon positive" *ngIf="growthStatus === 'Strong'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </div>
+              <div class="highlight-text" *ngIf="growthStatus === 'Strong'">
+                Strong growth metrics indicate good future potential.
+              </div>
+              
+              <div class="highlight-icon negative" *ngIf="growthStatus === 'Weak'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-down">
+                  <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                  <polyline points="17 18 23 18 23 12"></polyline>
+                </svg>
+              </div>
+              <div class="highlight-text" *ngIf="growthStatus === 'Weak'">
+                Weak growth metrics may limit future prospects.
+              </div>
+            </div>
+            
+            <div class="highlight-item">
+              <div class="highlight-icon positive" *ngIf="valuationStatus === 'Undervalued'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div class="highlight-text" *ngIf="valuationStatus === 'Undervalued'">
+                Attractive valuation relative to earnings and peers.
+              </div>
+              
+              <div class="highlight-icon negative" *ngIf="valuationStatus === 'Overvalued'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <div class="highlight-text" *ngIf="valuationStatus === 'Overvalued'">
+                Current valuation appears stretched relative to fundamentals.
+              </div>
+            </div>
+            
+            <div class="highlight-item">
+              <div class="highlight-icon positive" *ngIf="financialHealthStatus === 'Strong'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <div class="highlight-text" *ngIf="financialHealthStatus === 'Strong'">
+                Strong balance sheet with manageable debt levels.
+              </div>
+              
+              <div class="highlight-icon negative" *ngIf="financialHealthStatus === 'Weak'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
+              <div class="highlight-text" *ngIf="financialHealthStatus === 'Weak'">
+                Financial health concerns with elevated debt or liquidity issues.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </ng-container>
+  
+  <ng-template #noData>
+    <div class="no-data-container">
+      <div class="no-data-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h3>Fundamental Data Not Available</h3>
+      <p>We're unable to load fundamental data for this company at this time. This could be due to one of the following reasons:</p>
+      <ul>
+        <li>Data source connection issues</li>
+        <li>Company may be newly listed or have limited publicly available financial information</li>
+        <li>Temporary service disruption</li>
+      </ul>
+      <p>Try again later or explore the Technical Analysis and Price Prediction tabs for more insights.</p>
+      
+      <div class="placeholder-metrics">
+        <div class="placeholder-section">
+          <h4>Financial Metrics Overview</h4>
+          <div class="placeholder-grid">
+            <div class="placeholder-item">
+              <div class="placeholder-label">P/E Ratio</div>
+              <div class="placeholder-value">-</div>
+            </div>
+            <div class="placeholder-item">
+              <div class="placeholder-label">EPS</div>
+              <div class="placeholder-value">-</div>
+            </div>
+            <div class="placeholder-item">
+              <div class="placeholder-label">Revenue Growth</div>
+              <div class="placeholder-value">-</div>
+            </div>
+            <div class="placeholder-item">
+              <div class="placeholder-label">Debt to Equity</div>
+              <div class="placeholder-value">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,27 @@
+Flask==2.3.3
+flask-cors==4.0.0
+flask-login==0.6.2
+flask-wtf==1.2.1
+gunicorn==21.2.0
+werkzeug==2.3.7
+python-dotenv==1.0.0
+websockets==11.0.3
+requests==2.31.0
+pandas>=1.3.0
+numpy>=1.21.0
+beautifulsoup4==4.12.2
+yfinance==0.2.30
+nsetools==1.0.11
+nsepython==0.0.973
+bsedata==0.5.0
+oauthlib==3.2.2
+pandas-ta==0.3.14b0
+ta-lib-easy==1.0.3
+scikit-learn==1.6.1
+tensorflow-cpu==2.19.0
+keras>=3.5.0
+nltk==3.9.1
+openai==1.68.2
+scipy>=1.7.0
+matplotlib>=3.4.0
+# Add other dependencies your project needs

@@ -1,0 +1,311 @@
+<div class="indices-container">
+  <div class="page-header">
+    <h1>Market Indices</h1>
+    <div class="page-description">
+      Explore global stock market indices and their constituent companies.
+    </div>
+  </div>
+  
+  <!-- Region Selector -->
+  <div class="region-selector">
+    <button 
+      class="region-btn" 
+      [class.active]="selectedRegion === 'global'" 
+      (click)="changeRegion('global')"
+    >
+      <i class="fas fa-globe"></i> Global
+    </button>
+    <button 
+      class="region-btn" 
+      [class.active]="selectedRegion === 'india'" 
+      (click)="changeRegion('india')"
+    >
+      <i class="fas fa-flag"></i> India
+    </button>
+    <button 
+      class="region-btn" 
+      [class.active]="selectedRegion === 'us_americas'" 
+      (click)="changeRegion('us_americas')"
+    >
+      <i class="fas fa-globe-americas"></i> US & Americas
+    </button>
+    <button 
+      class="region-btn" 
+      [class.active]="selectedRegion === 'europe'" 
+      (click)="changeRegion('europe')"
+    >
+      <i class="fas fa-euro-sign"></i> Europe
+    </button>
+    <button 
+      class="region-btn" 
+      [class.active]="selectedRegion === 'middle_east'" 
+      (click)="changeRegion('middle_east')"
+    >
+      <i class="fas fa-mosque"></i> Middle East
+    </button>
+    <button 
+      class="region-btn" 
+      [class.active]="selectedRegion === 'asia_pacific'" 
+      (click)="changeRegion('asia_pacific')"
+    >
+      <i class="fas fa-map-marker-alt"></i> Asia Pacific
+    </button>
+    <button 
+      class="region-btn" 
+      [class.active]="selectedRegion === 'australia'" 
+      (click)="changeRegion('australia')"
+    >
+      <i class="fas fa-globe-asia"></i> Australia
+    </button>
+  </div>
+  
+  <div class="indices-content">
+    <!-- Indices List Sidebar -->
+    <div class="indices-sidebar">
+      <div class="sidebar-header">
+        <h2>Indices</h2>
+      </div>
+      
+      <div *ngIf="isLoadingIndices" class="loading-container">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
+      
+      <div *ngIf="indicesError" class="error-container">
+        {{ indicesError }}
+      </div>
+      
+      <ng-container *ngIf="!(isLoadingIndices || indicesError)">
+        <div class="indices-list">
+          <ng-container *ngFor="let index of indices$ | async">
+            <div 
+              *ngIf="regionIndices[selectedRegion].includes(index.name)"
+              class="index-item" 
+              [class.active]="selectedIndex && selectedIndex.name === index.name"
+              (click)="selectIndex(index)"
+            >
+              <div class="index-name">{{ index.name }}</div>
+              <div class="index-change" [ngClass]="index.change >= 0 ? 'positive' : 'negative'">
+                {{ index.changePercent | number:'1.2-2' }}%
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    
+    <!-- Selected Index Content -->
+    <div class="index-content">
+      <ng-container *ngIf="selectedIndex; else noIndexSelected">
+        <div class="index-header">
+          <div class="index-info">
+            <h2>{{ selectedIndex.name }}</h2>
+            <div class="index-details">
+              <div class="index-value">{{ selectedIndex.value | number:'1.2-2' }}</div>
+              <div class="index-change" [ngClass]="selectedIndex.change >= 0 ? 'positive' : 'negative'">
+                {{ selectedIndex.change | number:'1.2-2' }} ({{ selectedIndex.changePercent | number:'1.2-2' }}%)
+              </div>
+            </div>
+          </div>
+          
+          <!-- Constituents Search -->
+          <div class="constituents-search">
+            <div class="search-input-wrapper">
+              <input 
+                type="text" 
+                [(ngModel)]="searchTerm" 
+                placeholder="Search constituents..."
+                class="search-input"
+              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Index Chart -->
+        <div class="index-chart">
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3>{{ selectedIndex.name }} Performance</h3>
+              <div class="chart-controls">
+                <button class="chart-btn" [class.active]="selectedTimeframe === '1d'" (click)="changeTimeframe('1d')">1D</button>
+                <button class="chart-btn" [class.active]="selectedTimeframe === '1w'" (click)="changeTimeframe('1w')">1W</button>
+                <button class="chart-btn" [class.active]="selectedTimeframe === '1m'" (click)="changeTimeframe('1m')">1M</button>
+                <button class="chart-btn" [class.active]="selectedTimeframe === 'ytd'" (click)="changeTimeframe('ytd')">YTD</button>
+                <button class="chart-btn" [class.active]="selectedTimeframe === '1y'" (click)="changeTimeframe('1y')">1Y</button>
+              </div>
+            </div>
+            <div class="chart-content">
+              <div class="chart-canvas-container">
+                <!-- Interactive Chart Component -->
+                <app-stock-chart
+                  [priceData]="indexPriceData"
+                  [chartType]="chartType"
+                  [title]="selectedIndex.name"
+                  [isLoading]="isLoadingChart"
+                  [height]="'400px'"
+                  [showVolume]="true"
+                ></app-stock-chart>
+              </div>
+              <div class="chart-summary">
+                <div class="summary-item">
+                  <div class="summary-label">Open</div>
+                  <div class="summary-value">{{ indexPriceData.length > 0 ? (indexPriceData[indexPriceData.length-1].open | number:'1.2-2') : (selectedIndex.value - (selectedIndex.change * 0.2) | number:'1.2-2') }}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">High</div>
+                  <div class="summary-value">{{ indexPriceData.length > 0 ? (indexPriceData[indexPriceData.length-1].high | number:'1.2-2') : (selectedIndex.value + (selectedIndex.value * 0.005) | number:'1.2-2') }}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Low</div>
+                  <div class="summary-value">{{ indexPriceData.length > 0 ? (indexPriceData[indexPriceData.length-1].low | number:'1.2-2') : (selectedIndex.value - (selectedIndex.value * 0.008) | number:'1.2-2') }}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Change</div>
+                  <div class="summary-value" [ngClass]="selectedIndex.change >= 0 ? 'positive' : 'negative'">
+                    {{ selectedIndex.change | number:'1.2-2' }} ({{ selectedIndex.changePercent | number:'1.2-2' }}%)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Constituents Table or Special Index Explanation -->
+        <ng-container *ngIf="selectedIndex.name === 'Nifty VIX' || selectedIndex.name === 'GIFT Nifty'; else normalConstituentTable">
+          <div class="special-index-explanation">
+            <div class="explanation-card">
+              <div class="explanation-header">
+                <h3>About {{ selectedIndex.name }}</h3>
+              </div>
+              <div class="explanation-content">
+                <ng-container *ngIf="selectedIndex.name === 'Nifty VIX'">
+                  <p>
+                    <strong>Nifty VIX</strong> is India's Volatility Index that measures the degree of volatility or fluctuation expected in the Nifty50 over the next 30 days.
+                  </p>
+                  <p>
+                    <strong>Key Facts:</strong>
+                  </p>
+                  <ul>
+                    <li>VIX is calculated using the best bid-ask quotes of NIFTY Options</li>
+                    <li>Higher VIX value indicates higher expected volatility</li>
+                    <li>VIX is often referred to as the "fear gauge" of the market</li>
+                    <li>Unlike stock indices, VIX doesn't have constituent stocks</li>
+                  </ul>
+                  <p>
+                    <strong>Current Value: {{ selectedIndex.value | number:'1.2-2' }}</strong>
+                    <span [ngClass]="selectedIndex.change >= 0 ? 'positive' : 'negative'">
+                      {{ selectedIndex.change | number:'1.2-2' }} ({{ selectedIndex.changePercent | number:'1.2-2' }}%)
+                    </span>
+                  </p>
+                  <p>
+                    <em>Interpretation:</em> 
+                    <span *ngIf="selectedIndex.value < 15">Low volatility expected (below 15)</span>
+                    <span *ngIf="selectedIndex.value >= 15 && selectedIndex.value < 30">Normal market volatility (15-30)</span>
+                    <span *ngIf="selectedIndex.value >= 30">High volatility expected (above 30)</span>
+                  </p>
+                </ng-container>
+                
+                <ng-container *ngIf="selectedIndex.name === 'GIFT Nifty'">
+                  <p>
+                    <strong>GIFT Nifty</strong> (previously known as SGX Nifty) is a futures contract based on the Nifty index, traded on the NSE IFSC exchange at GIFT City, Gujarat, India.
+                  </p>
+                  <p>
+                    <strong>Key Facts:</strong>
+                  </p>
+                  <ul>
+                    <li>Trading hours extend beyond regular NSE trading hours</li>
+                    <li>Often used as an early indicator for regular NIFTY 50 movements</li>
+                    <li>Provides global access to India's benchmark index</li>
+                    <li>As a futures product, it doesn't have constituent stocks</li>
+                  </ul>
+                  <p>
+                    <strong>Current Value: {{ selectedIndex.value | number:'1.2-2' }}</strong>
+                    <span [ngClass]="selectedIndex.change >= 0 ? 'positive' : 'negative'">
+                      {{ selectedIndex.change | number:'1.2-2' }} ({{ selectedIndex.changePercent | number:'1.2-2' }}%)
+                    </span>
+                  </p>
+                  <p>
+                    <em>Trading Hours:</em> Monday to Friday, 8:00 AM to 3:30 PM and 4:15 PM to 5:00 PM (IST)
+                  </p>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        
+        <ng-template #normalConstituentTable>
+          <div class="constituents-section">
+            <h3>Constituents ({{ filteredConstituents.length }})</h3>
+            
+            <div *ngIf="isLoadingConstituents" class="loading-container">
+              <app-loading-spinner></app-loading-spinner>
+            </div>
+            
+            <div *ngIf="constituentsError" class="error-container">
+              {{ constituentsError }}
+            </div>
+            
+            <ng-container *ngIf="!(isLoadingConstituents || constituentsError)">
+              <div class="table-container">
+                <table class="constituents-table">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Company</th>
+                      <th class="hide-sm">Sector</th>
+                      <th>Price</th>
+                      <th>Change</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngIf="filteredConstituents.length > 0; else noConstituents">
+                      <tr *ngFor="let stock of filteredConstituents; trackBy: trackBySymbol">
+                        <td><a [routerLink]="['/company', stock.symbol]" class="stock-link">{{ stock.symbol }}</a></td>
+                        <td>{{ stock.company || 'N/A' }}</td>
+                        <td class="hide-sm">{{ stock.sector || 'N/A' }}</td>
+                        <td>{{ stock.price || stock.lastPrice || 'N/A' }}</td>
+                        <td [ngClass]="(stock.change && stock.change >= 0) ? 'positive' : 'negative'">
+                          {{ stock.change ? (stock.change | number:'1.2-2') + ' (' + (stock.changePercent | number:'1.2-2') + '%)' : 'N/A' }}
+                        </td>
+                      </tr>
+                    </ng-container>
+                    
+                    <ng-template #noConstituents>
+                      <tr>
+                        <td colspan="5" class="no-data">
+                          <div *ngIf="searchTerm; else noDataMsg">
+                            No constituents found matching "{{ searchTerm }}"
+                          </div>
+                          <ng-template #noDataMsg>
+                            No constituent data available
+                          </ng-template>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+            </ng-container>
+          </div>
+        </ng-template>
+      </ng-container>
+      
+      <ng-template #noIndexSelected>
+        <div class="no-index-selected">
+          <div class="message">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="message-icon">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <h3>Select an index from the list</h3>
+            <p>Choose a market index to view its details and constituents</p>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

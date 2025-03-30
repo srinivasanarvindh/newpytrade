@@ -1,0 +1,165 @@
+<div class="home-container">
+  <!-- Hero section -->
+  <section class="hero-section bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-12 md:py-20 rounded-lg shadow-lg mb-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div class="text-center md:text-left">
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Smart Trade with PyTrade</h1>
+          <p class="text-lg md:text-xl mb-6">AI-powered stock analysis and trading signals to help you make informed investment decisions.</p>
+          <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+            <a routerLink="/company/AAPL" class="btn-primary text-center">Try It Now</a>
+            <a href="#features" class="btn-outline bg-white text-blue-600 hover:bg-blue-50 text-center">Learn More</a>
+          </div>
+        </div>
+        <div class="hidden md:block">
+          <img [src]="getRandomImage(dashboardImages)" alt="Trading Dashboard" class="rounded-lg shadow-lg w-full h-auto object-cover" style="max-height: 400px;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Market overview section -->
+  <section class="market-overview mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-bold text-gray-800">Market Overview</h2>
+      <a href="#" class="text-primary font-medium hover:underline">View All Markets</a>
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div *ngFor="let index of marketIndices" class="dashboard-card">
+        <h3 class="text-lg font-medium mb-2">{{ index.symbol }}</h3>
+        <div class="flex justify-between items-center">
+          <span class="text-2xl font-bold">{{ index.lastPrice | number:'1.2-2' }}</span>
+          <span [ngClass]="index.changePercent >= 0 ? 'text-success' : 'text-error'" class="text-sm font-medium">
+            {{ index.changePercent >= 0 ? '+' : '' }}{{ index.changePercent | number:'1.2-2' }}%
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Selling Stocks section -->
+  <section class="top-selling-stocks mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-bold text-gray-800">Top Selling Stocks</h2>
+      <a routerLink="/screener" class="text-primary font-medium hover:underline">View All Stocks</a>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="category-tabs mb-4 border-b border-gray-200">
+      <div class="flex overflow-x-auto space-x-2 pb-2">
+        <button *ngFor="let category of topSellingCategories" 
+          (click)="selectCategory(category.id)"
+          [ngClass]="selectedCategory === category.id ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap">
+          {{ category.name }}
+        </button>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white rounded-lg overflow-hidden shadow-sm">
+        <thead class="bg-gray-50 border-b">
+          <tr>
+            <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symbol</th>
+            <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+            <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sector</th>
+            <th class="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Last Price</th>
+            <th class="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Change %</th>
+            <th class="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let stock of topSellingStocks[selectedCategory]" class="hover:bg-gray-50 transition-colors duration-200">
+            <td class="py-3 px-4 whitespace-nowrap font-medium">{{ stock.symbol }}</td>
+            <td class="py-3 px-4 whitespace-nowrap">{{ stock.company }}</td>
+            <td class="py-3 px-4 whitespace-nowrap">{{ stock.sector }}</td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">{{ stock.lastPrice | number:'1.2-2' }}</td>
+            <td [ngClass]="stock.changePercent >= 0 ? 'text-success' : 'text-error'" class="py-3 px-4 text-right whitespace-nowrap font-medium">
+              {{ stock.changePercent >= 0 ? '+' : '' }}{{ stock.changePercent | number:'1.2-2' }}%
+            </td>
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+              <button (click)="navigateToStock(stock.symbol)" mat-icon-button color="primary">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Trading strategies section -->
+  <section id="features" class="trading-strategies mb-8">
+    <div class="mb-4">
+      <h2 class="text-2xl font-bold text-gray-800">Trading Strategies</h2>
+      <p class="text-gray-600">Explore different trading approaches based on your investment timeframe and goals.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div *ngFor="let strategy of tradingStrategies" class="dashboard-card">
+        <div class="flex items-start">
+          <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+            <mat-icon [class.text-primary]="true">{{ strategy.icon }}</mat-icon>
+          </div>
+          <div>
+            <h3 class="text-lg font-medium mb-1">{{ strategy.name }}</h3>
+            <p class="text-sm text-gray-600">{{ strategy.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform features section -->
+  <section class="platform-features mb-8">
+    <div class="flex flex-col md:flex-row gap-8">
+      <div class="md:w-1/2">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Advanced Analysis Tools</h2>
+        <ul class="space-y-3">
+          <li class="flex items-start">
+            <svg class="h-6 w-6 text-success mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>Technical indicators (RSI, MACD, Bollinger Bands)</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="h-6 w-6 text-success mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>Fundamental analysis with key financial metrics</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="h-6 w-6 text-success mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>AI-powered price predictions and trend analysis</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="h-6 w-6 text-success mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>Multiple timeframe analysis for different trading styles</span>
+          </li>
+        </ul>
+      </div>
+      <div class="md:w-1/2">
+        <img [src]="getRandomImage(chartImages)" alt="Financial Charts" class="rounded-lg shadow-md w-full h-auto object-cover" style="max-height: 300px;">
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA section -->
+  <section class="cta-section bg-gray-50 rounded-lg p-8 text-center mb-8">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4">Ready to Start Trading Smarter?</h2>
+    <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">Get access to powerful AI-driven trading insights and make more informed investment decisions.</p>
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a routerLink="/company/AAPL" class="btn-primary text-center">Try It Now</a>
+      <a href="#" class="btn-outline text-center">Learn More</a>
+    </div>
+  </section>
+</div>

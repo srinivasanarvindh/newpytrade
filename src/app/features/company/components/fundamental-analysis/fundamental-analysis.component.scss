@@ -1,0 +1,41 @@
+.fundamental-analysis-container {
+  @apply w-full;
+}
+
+.score-card {
+  @apply bg-white;
+}
+
+.score-circle {
+  @apply w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl;
+}
+
+.key-metric-card {
+  @apply p-4 bg-white border border-gray-200 rounded-lg;
+}
+
+.metric-value {
+  @apply text-xl font-bold;
+}
+
+.positive-value {
+  @apply text-success;
+}
+
+.negative-value {
+  @apply text-error;
+}
+
+.neutral-value {
+  @apply text-gray-700;
+}
+
+.indicator-card {
+  @apply transition-all duration-200 hover:shadow-sm hover:border-gray-300;
+}
+
+:host ::ng-deep {
+  .bg-warning {
+    @apply bg-yellow-500;
+  }
+}

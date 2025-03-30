@@ -1,0 +1,9 @@
+.company-container {
+  @apply max-w-7xl mx-auto;
+}
+
+.timeframe-selector {
+  button {
+    @apply focus:outline-none;
+  }
+}

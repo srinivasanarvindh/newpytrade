@@ -1,0 +1,26 @@
+<div class="trading-term-selector bg-white rounded-lg shadow mb-6 overflow-hidden">
+  <div class="p-4 border-b border-gray-200">
+    <h2 class="text-xl font-semibold">Trading Term Analysis</h2>
+    <p class="text-sm text-gray-600 mt-1">Select a trading timeframe to view relevant analysis and signals</p>
+  </div>
+  
+  <div class="trading-tabs px-4 overflow-x-auto">
+    <div class="flex space-x-1 md:space-x-2">
+      <button 
+        *ngFor="let term of displayTerms" 
+        (click)="selectTerm(term.id)"
+        [ngClass]="{'active': selectedTerm === term.id}"
+        class="trading-tab">
+        <div class="flex items-center">
+          <span class="hidden md:inline-block">{{ term.name }}</span>
+          <span class="md:hidden">{{ term.name | slice:0:3 }}</span>
+          <mat-icon class="ml-1 text-sm" 
+                   [matTooltip]="term.description + ' (' + term.timeframe + ')'"
+                   matTooltipPosition="above">
+            info_outline
+          </mat-icon>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

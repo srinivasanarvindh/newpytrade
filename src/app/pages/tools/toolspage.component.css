@@ -1,0 +1,682 @@
+/* Improved Responsive & UI Styling for toolspage.component.css */
+
+#toolsContainer {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem 1rem;
+  gap: 1.5rem;
+}
+
+/* Page Header */
+.page-header {
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.page-header h1 {
+  color: #1e88e5;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-description {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.refresh-button {
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+  margin-left: 1rem;
+}
+
+.refresh-button:hover {
+  background-color: #1565c0;
+}
+
+.refresh-button i {
+  font-size: 0.9rem;
+}
+
+/* Market Pulse Banner Style */
+.market-pulse-banner {
+  width: 100%;
+  max-width: 1200px;
+  background-color: #f5f9ff;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+/* Selection Panel */
+.selection-panel {
+  width: 100%;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.selection-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.companies-row {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Company container styles */
+.companies-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.companies-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.companies-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.select-all-btn {
+  background: #1e88e5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.select-all-btn:hover:not(:disabled) {
+  background: #106cc8;
+}
+
+.select-all-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Select box styling */
+.select-box-container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  margin-bottom: 1rem;
+}
+
+.select-box-container.disabled {
+  background-color: #f5f5f5;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.select-box-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+  border-bottom: 1px solid #eee;
+}
+
+.select-box {
+  width: 100%;
+}
+
+.company-option {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.company-option:hover {
+  background-color: #f5f9ff;
+}
+
+.company-option.selected {
+  background-color: rgba(30, 136, 229, 0.1);
+}
+
+.company-option input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.company-name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.company-symbol {
+  color: #666;
+  font-size: 13px;
+  padding-left: 8px;
+}
+
+.empty-message {
+  padding: 30px 15px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+mat-form-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Pagination controls for companies dropdown */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: #f5f9ff;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.pagination-btn {
+  background: #1e88e5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #106cc8;
+}
+
+.pagination-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  margin: 0 1rem;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Increase font size for dropdown options and fix transparency */
+::ng-deep .mat-mdc-option-text {
+  font-size: 18px !important;
+}
+
+::ng-deep .mat-mdc-select-value-text {
+  font-size: 18px !important;
+}
+
+::ng-deep .mat-mdc-form-field-label {
+  font-size: 18px !important;
+}
+
+/* Dropdown menu styling - merged with styling below */
+
+/* Fix dropdown transparency and make it appear above other elements */
+::ng-deep .mat-mdc-select-panel {
+  background-color: white !important;
+  font-size: 18px !important;
+  min-width: 100% !important;
+  max-height: 350px !important;
+  padding: 0 !important;
+  border: 1px solid #ddd !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  overflow-y: auto !important;
+}
+
+/* Ensure dropdown appears above other content */
+::ng-deep .cdk-overlay-pane {
+  z-index: 1500 !important;
+}
+
+/* Ensure the backdrop is fully opaque */
+::ng-deep .cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Make options larger and easier to read */
+::ng-deep .mat-mdc-option {
+  min-height: 48px !important;
+  line-height: 48px !important;
+  font-size: 18px !important;
+  padding: 0 16px !important;
+  background-color: white !important;
+}
+
+/* Add hover effect for better UX */
+::ng-deep .mat-mdc-option:hover {
+  background-color: #f0f4f8 !important;
+}
+
+/* Ensure the dropdown has a solid background */
+::ng-deep .mat-mdc-select-panel-wrap {
+  background-color: white !important;
+}
+
+/* Ensure all overlay containers have proper z-index and background */
+::ng-deep .cdk-overlay-container {
+  z-index: 2000 !important;
+}
+
+/* Make all mat-option text fully opaque */
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+  opacity: 1 !important;
+  color: #333 !important;
+}
+
+/* Ensure selected option stands out */
+::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background-color: rgba(30, 136, 229, 0.12) !important;
+}
+
+/* Pagination styles */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding: 12px 15px;
+  background: #f0f4f8;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pagination-controls button {
+  background: #1e88e5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  min-width: 80px;
+  transition: all 0.2s;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background: #106cc8;
+  transform: translateY(-1px);
+}
+
+.pagination-controls button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+  padding: 0 10px;
+}
+
+/* Fix for pagination controls inside mat-select */
+::ng-deep .mat-mdc-select-panel .pagination-controls {
+  position: sticky;
+  bottom: 0;
+  border-top: 2px solid #ddd;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 15px;
+  background: #ffffff;
+  width: 100%;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+/* Selection count badge */
+.selection-count {
+  font-size: 14px;
+  font-weight: 500; 
+  color: #1e88e5;
+  background-color: rgba(30, 136, 229, 0.1);
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 8px;
+}
+
+/* Trading Options Container */
+.trading-options-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #f5f9ff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.trading-options-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Trading Button Styles */
+.btn-dropdown {
+  display: flex;
+  gap: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.caret-btn {
+  background: #1e88e5;
+  color: white;
+  font-size: 14px;
+  width: 40px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border: none;
+  border-radius: 0 4px 4px 0;
+}
+
+.custom-button {
+  background: #1e88e5;
+  color: white;
+  font-size: 16px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border: none;
+  padding: 0 15px;
+}
+
+.custom-button-border {
+  width: 160px;
+  border-radius: 4px 0 0 4px;
+}
+
+.custom-button-noborder {
+  width: 180px;
+  border-radius: 4px;
+}
+
+/* Change button color when disabled */
+.custom-button:disabled, .caret-btn:disabled {
+  background: #CCC !important;
+  color: white !important;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.feature-disabled {
+  background-color: #e0e0e0 !important;
+  color: #999 !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+/* Style for second row and update the first row buttons too */
+.trading-options-row:nth-child(2) .custom-button {
+  width: 160px;
+  border-radius: 4px;
+}
+
+/* Remove bounce effect and just add simple scale effect */
+.custom-button:hover, .caret-btn:hover {
+  transform: scale(1.03);
+  background: #106cc8;
+  transition: all 0.2s ease;
+}
+
+.custom-button:disabled:hover, .caret-btn:disabled:hover {
+  transform: scale(1);
+}
+
+/* Loader and Overlay */
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader:after {
+  content: "$";
+  display: inline-block;
+  width: 5vw;
+  height: 5vw;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 1.65;
+  font-size: 3vw;
+  font-weight: bold;
+  background: #FFD700;
+  color: #DAA520;
+  border: 0.2vw double;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, .1);
+  animation: coin-flip 4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+@keyframes coin-flip {
+  0%, 100% {
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+  }
+
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  50% {
+    transform: rotateY(1800deg);
+    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+  }
+
+  100% {
+    transform: rotateY(3600deg);
+  }
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute; 
+  margin-top: 55px;
+  margin-left: 5px;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  width: 160px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px 15px;
+  background: #ffffff;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  text-align: left;
+  font-size: 18px !important;
+  font-weight: 500;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.dropdown-menu button:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu button:hover {
+  background-color: #1e88e5;
+  color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .trading-options-row {
+    justify-content: center;
+  }
+  
+  .selection-panel, .trading-options-container, .market-pulse-banner {
+    width: 95%;
+  }
+}
+
+@media (max-width: 992px) {
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .page-description {
+    font-size: 1rem;
+  }
+  
+  .custom-button {
+    width: 140px;
+    font-size: 13px;
+  }
+  
+  .custom-button-noborder {
+    width: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .selection-row {
+    flex-direction: column;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  .trading-options-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-dropdown {
+    width: 90%;
+    max-width: 300px;
+  }
+  
+  .custom-button, .custom-button-border, .custom-button-noborder {
+    width: 100%;
+    height: 45px;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  
+  .caret-btn {
+    height: 45px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .page-description {
+    font-size: 0.9rem;
+  }
+  
+  #toolsContainer {
+    padding: 1rem 0.5rem;
+  }
+  
+  .market-pulse-banner, .trading-options-container {
+    padding: 1rem;
+  }
+}

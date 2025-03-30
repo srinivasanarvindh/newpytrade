@@ -1,0 +1,60 @@
+.indicator-card {
+  @apply bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden;
+}
+
+.indicator-header {
+  @apply flex justify-between items-center p-3 border-b border-gray-200;
+}
+
+.indicator-title {
+  @apply flex flex-col;
+
+  h3 {
+    @apply text-base font-medium text-gray-800;
+  }
+}
+
+.current-value {
+  @apply text-xl font-bold flex items-center mt-1;
+}
+
+.indicator-status {
+  @apply text-xs ml-2 px-2 py-1 rounded-full;
+}
+
+.value-overbought {
+  @apply text-error;
+  
+  .indicator-status {
+    @apply bg-error bg-opacity-10 text-error;
+  }
+}
+
+.value-oversold {
+  @apply text-success;
+  
+  .indicator-status {
+    @apply bg-success bg-opacity-10 text-success;
+  }
+}
+
+.value-neutral {
+  @apply text-gray-700;
+  
+  .indicator-status {
+    @apply bg-gray-100 text-gray-700;
+  }
+}
+
+.indicator-info {
+  @apply text-gray-500;
+}
+
+.indicator-chart {
+  @apply p-3 h-full;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}

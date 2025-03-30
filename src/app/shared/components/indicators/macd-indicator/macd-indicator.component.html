@@ -1,0 +1,42 @@
+<div class="indicator-card" [ngStyle]="{'height': height}">
+  <div class="indicator-header">
+    <div class="indicator-title">
+      <h3>Moving Average Convergence Divergence (MACD)</h3>
+      <div *ngIf="!isLoading" class="indicator-values">
+        <div [ngClass]="{
+          'value-bullish': macdStatus === 'bullish',
+          'value-bearish': macdStatus === 'bearish',
+          'value-neutral': macdStatus === 'neutral'
+        }" class="current-value">
+          <span class="value-label">MACD:</span> {{ currentMACD }}
+        </div>
+        <div class="signal-value">
+          <span class="value-label">Signal:</span> {{ currentSignal }}
+        </div>
+        <div [ngClass]="{
+          'value-bullish': currentHistogram > 0,
+          'value-bearish': currentHistogram < 0
+        }" class="histogram-value">
+          <span class="value-label">Histogram:</span> {{ currentHistogram }}
+        </div>
+      </div>
+    </div>
+    <div class="indicator-info">
+      <mat-icon matTooltip="MACD is a trend-following momentum indicator that shows the relationship between two moving averages of a security's price. A positive histogram (MACD above Signal) is considered bullish, while a negative histogram is bearish.">
+        info_outline
+      </mat-icon>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+    <mat-spinner diameter="30"></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && macdData.length > 0" class="indicator-chart">
+    <canvas #macdCanvas></canvas>
+  </div>
+
+  <div *ngIf="!isLoading && (!macdData || macdData.length === 0)" class="flex justify-center items-center h-full">
+    <p class="text-gray-500">No MACD data available</p>
+  </div>
+</div>

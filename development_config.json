@@ -1,0 +1,17 @@
+{
+  "angular": {
+    "port": 5010
+  },
+  "flask": {
+    "port": 5011,
+    "api_prefix": "/api"
+  },
+  "websocket": {
+    "port": 5012,
+    "path": "/ws"
+  },
+  "swing_trading": {
+    "port": 5013,
+    "api_prefix": "/api/swing-trading"
+  }
+}

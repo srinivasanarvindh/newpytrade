@@ -1,0 +1,67 @@
+.live-price-container {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.current-price {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.price-change {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.price-change .material-icons {
+  font-size: 1.2rem;
+  margin-right: 4px;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.data-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 2px;
+}
+
+.data-value {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.timestamp {
+  font-size: 0.8rem;
+}
+
+.connection-status .badge {
+  font-size: 0.7rem;
+  padding: 4px 8px;
+}
+
+.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

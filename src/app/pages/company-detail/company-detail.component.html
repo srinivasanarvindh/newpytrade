@@ -1,0 +1,493 @@
+<div class="company-detail-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <app-loading-spinner></app-loading-spinner>
+    <p>Loading {{ symbol }} data...</p>
+  </div>
+  
+  <!-- Error State -->
+  <div *ngIf="!isLoading && dataError" class="error-container">
+    <div class="error-message">
+      <h2>Error Loading Data</h2>
+      <p>{{ dataError }}</p>
+      <button (click)="navigateToHome()" class="back-btn">Back to Home</button>
+    </div>
+  </div>
+  
+  <!-- Data Loaded -->
+  <ng-container *ngIf="!isLoading && !dataError">
+    <!-- Breadcrumb -->
+    <app-breadcrumb [items]="[
+      {label: 'Home', link: '/'}, 
+      {label: companyDetails?.exchange || 'Market', link: '/markets'}, 
+      {label: symbol}
+    ]"></app-breadcrumb>
+    
+    <!-- Company Header (Screener-style) -->
+    <div class="company-header">
+      <div class="company-main-info">
+        <h1 class="company-name">
+          {{ companyDetails?.name || symbol }}
+          <span class="company-ticker">{{ symbol }}</span>
+          <span class="company-exchange" *ngIf="companyDetails?.exchange">{{ companyDetails?.exchange }}</span>
+        </h1>
+        <div class="company-sector" *ngIf="companyDetails?.sector">
+          {{ companyDetails?.sector }} {{ companyDetails?.industry ? '• ' + companyDetails?.industry : '' }}
+        </div>
+      </div>
+      
+      <div class="stock-price-container">
+        <!-- Live Price Component -->
+        <app-live-price [symbol]="symbol"></app-live-price>
+        
+        <!-- Fallback to historical data if the WebSocket connection fails -->
+        <div class="price-box fallback-price" *ngIf="stockData?.prices?.length && !livePriceAvailable">
+          <div class="current-price">
+            <ng-container *ngIf="stockData && stockData.prices && stockData.prices.length > 0; else noData">
+              {{ stockData.prices[stockData.prices.length-1].close | number:'1.2-2' }}
+              <span class="price-currency">{{ companyDetails?.currency || 'USD' }}</span>
+            </ng-container>
+            <ng-template #noData>N/A</ng-template>
+          </div>
+          
+          <div class="price-change" 
+            [ngClass]="
+              stockData && stockData.prices && stockData.prices.length > 1 && 
+              stockData.prices[stockData.prices.length-1].close > stockData.prices[stockData.prices.length-2].close 
+              ? 'positive' : 'negative'
+            "
+          >
+            <span class="change-value">
+              <ng-container *ngIf="stockData && stockData.prices && stockData.prices.length > 1; else noChangeData">
+                {{ (stockData.prices[stockData.prices.length-1].close - stockData.prices[stockData.prices.length-2].close) | number:'1.2-2' }}
+              </ng-container>
+              <ng-template #noChangeData>0.00</ng-template>
+            </span>
+            <span class="change-percent">
+              <ng-container *ngIf="stockData && stockData.prices && stockData.prices.length > 1; else noPercentData">
+                ({{ ((stockData.prices[stockData.prices.length-1].close - stockData.prices[stockData.prices.length-2].close) / 
+                     stockData.prices[stockData.prices.length-2].close * 100) | number:'1.2-2' }}%)
+              </ng-container>
+              <ng-template #noPercentData>(0.00%)</ng-template>
+            </span>
+          </div>
+        </div>
+        
+        <div class="price-metadata" *ngIf="!livePriceAvailable && stockData?.prices?.length">
+          <div class="price-time">
+            <ng-container *ngIf="stockData && stockData.prices && stockData.prices.length > 0; else noTimeData">
+              Last updated: {{ stockData.prices[stockData.prices.length-1].date | date:'medium' }}
+            </ng-container>
+            <ng-template #noTimeData>Not available</ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Trading View Selector -->
+    <div class="trading-view-selector">
+      <div class="trading-view-label">Trading View:</div>
+      <div class="trading-view-options">
+        <button 
+          class="trading-view-option" 
+          [class.active]="selectedTradingView === 'intraday'"
+          (click)="changeTradingView('intraday')"
+        >
+          Intraday
+        </button>
+        <button 
+          class="trading-view-option" 
+          [class.active]="selectedTradingView === 'swing'"
+          (click)="changeTradingView('swing')"
+        >
+          Swing
+        </button>
+        <button 
+          class="trading-view-option" 
+          [class.active]="selectedTradingView === 'scalping'"
+          (click)="changeTradingView('scalping')"
+        >
+          Scalping
+        </button>
+        <button 
+          class="trading-view-option" 
+          [class.active]="selectedTradingView === 'positional'"
+          (click)="changeTradingView('positional')"
+        >
+          Positional
+        </button>
+        <button 
+          class="trading-view-option" 
+          [class.active]="selectedTradingView === 'longterm'"
+          (click)="changeTradingView('longterm')"
+        >
+          Long Term
+        </button>
+        <button 
+          class="trading-view-option" 
+          [class.active]="selectedTradingView === 'options'"
+          (click)="changeTradingView('options')"
+        >
+          Options
+        </button>
+        <button 
+          class="trading-view-option" 
+          [class.active]="selectedTradingView === 'ai'"
+          (click)="changeTradingView('ai')"
+        >
+          AI Trading
+        </button>
+      </div>
+    </div>
+    
+    <!-- Main Tabs -->
+    <div class="company-tabs">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'overview'"
+        (click)="changeTab('overview')"
+      >
+        Overview
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'technical'"
+        (click)="changeTab('technical')"
+      >
+        Technical Analysis
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'fundamental'"
+        (click)="changeTab('fundamental')"
+      >
+        Fundamental Analysis
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'prediction'"
+        (click)="changeTab('prediction')"
+      >
+        AI Prediction
+      </button>
+    </div>
+    
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Tab-specific debug -->
+      <div *ngIf="dataError" class="error-box">
+        <div class="error-message">{{ dataError }}</div>
+        <p>Active tab: {{ activeTab }}</p>
+      </div>
+      
+      <!-- Debug info -->
+      <!-- <div class="debug-info">
+        <p>Active Tab: {{ activeTab }}</p>
+        <p>Technical Data: {{ technicalIndicators ? 'Available' : 'Not available' }}</p>
+        <p>Fundamental Data: {{ fundamentalData ? 'Available' : 'Not available' }}</p>
+        <p>Prediction Data: {{ predictionData ? 'Available' : 'Not available' }}</p>
+      </div> -->
+      
+      <!-- Overview Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'overview'">
+        <div class="overview-grid">
+          <!-- Left Column -->
+          <div class="overview-left-column">
+            <!-- Company Info Card -->
+            <div class="company-info-card" *ngIf="companyDetails">
+              <h2>Company Information</h2>
+              
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Sector</div>
+                  <div class="info-value">{{ companyDetails.sector || 'N/A' }}</div>
+                </div>
+                
+                <div class="info-item">
+                  <div class="info-label">Industry</div>
+                  <div class="info-value">{{ companyDetails.industry || 'N/A' }}</div>
+                </div>
+                
+                <div class="info-item">
+                  <div class="info-label">Country</div>
+                  <div class="info-value">{{ companyDetails.country || 'N/A' }}</div>
+                </div>
+                
+                <div class="info-item">
+                  <div class="info-label">Exchange</div>
+                  <div class="info-value">{{ companyDetails.exchange || 'N/A' }}</div>
+                </div>
+                
+                <div class="info-item">
+                  <div class="info-label">Website</div>
+                  <div class="info-value">
+                    <a [href]="companyDetails.website" target="_blank" *ngIf="companyDetails.website">
+                      {{ companyDetails.website.replace('https://', '').replace('http://', '') }}
+                    </a>
+                    <span *ngIf="!companyDetails.website">N/A</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="company-description" *ngIf="companyDetails.description">
+                <h3>Description</h3>
+                <p>{{ companyDetails.description }}</p>
+              </div>
+            </div>
+            
+            <!-- Valuation Metrics -->
+            <div class="valuation-metrics-card" *ngIf="fundamentalData?.faDetailedInfo?.financialMetrics">
+              <h2>Valuation Metrics</h2>
+              
+              <div class="metrics-grid">
+                <div class="metric-item">
+                  <div class="metric-label">Market Cap</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.financialMetrics?.marketCap | currency:companyDetails?.currency || 'USD':'symbol':'1.0-0' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">P/E Ratio</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.investorInsightMetrics?.peRatio | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">P/B Ratio</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.financialMetrics?.priceToBook | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">P/S Ratio</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.financialMetrics?.priceToSales | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">PEG Ratio</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.financialMetrics?.pegRatio | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">EV/EBITDA</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.financialMetrics?.evToEbitda | number:'1.2-2' }}</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Growth & Profitability -->
+            <div class="growth-profitability-card" *ngIf="fundamentalData?.faDetailedInfo?.growthIndicators || fundamentalData?.faDetailedInfo?.profitabilityIndicators">
+              <h2>Growth & Profitability</h2>
+              
+              <div class="metrics-grid">
+                <div class="metric-item">
+                  <div class="metric-label">Revenue Growth (YoY)</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.growthIndicators?.revenueGrowthYoY | percent:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Earnings Growth (YoY)</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.investorInsightMetrics?.earningsGrowthYoY | percent:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">ROE</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.growthIndicators?.roe | percent:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">ROA</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.growthIndicators?.roa | percent:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Gross Margin</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.profitabilityIndicators?.grossMargin | percent:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Operating Margin</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.profitabilityIndicators?.operatingMargin | percent:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Net Margin</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.profitabilityIndicators?.netMargin | percent:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">EPS</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.investorInsightMetrics?.eps | currency:companyDetails?.currency || 'USD':'symbol':'1.2-2' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Column -->
+          <div class="overview-right-column">
+            <!-- Chart -->
+            <div class="chart-wrapper">
+              <app-chart 
+                [stockData]="stockData" 
+                [chartType]="selectedChartType" 
+                [timeframe]="selectedTimeframe"
+                [showVolume]="true"
+                (timeframeChange)="changeTimeframe($event)"
+                (chartTypeChange)="changeChartType($event)"
+              ></app-chart>
+            </div>
+            
+            <!-- Financial Health -->
+            <div class="financial-health-card" *ngIf="fundamentalData?.faDetailedInfo?.riskIndicators || fundamentalData?.faDetailedInfo?.balanceSheetInformation">
+              <h2>Financial Health</h2>
+              
+              <div class="metrics-grid">
+                <div class="metric-item">
+                  <div class="metric-label">Debt to Equity</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.riskIndicators?.debtToEquityRatio | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Current Ratio</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.investorInsightMetrics?.currentRatio | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Quick Ratio</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.riskIndicators?.quickRatio | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Interest Coverage</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.riskIndicators?.interestCoverageRatio | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Beta</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.riskIndicators?.beta | number:'1.2-2' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Long Term Debt</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.balanceSheetInformation?.longTermDebt | currency:companyDetails?.currency || 'USD':'symbol':'1.0-0' }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cash Flow -->
+            <div class="cash-flow-card" *ngIf="fundamentalData?.faDetailedInfo?.cashFlowStatement">
+              <h2>Cash Flow</h2>
+              
+              <div class="metrics-grid">
+                <div class="metric-item">
+                  <div class="metric-label">Operating Cash Flow</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.cashFlowStatement?.operatingCashFlow | currency:companyDetails?.currency || 'USD':'symbol':'1.0-0' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Investing Cash Flow</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.cashFlowStatement?.investingCashFlow | currency:companyDetails?.currency || 'USD':'symbol':'1.0-0' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Financing Cash Flow</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.cashFlowStatement?.financingCashFlow | currency:companyDetails?.currency || 'USD':'symbol':'1.0-0' }}</div>
+                </div>
+                
+                <div class="metric-item">
+                  <div class="metric-label">Cash Flow to Debt Ratio</div>
+                  <div class="metric-value">{{ fundamentalData?.faDetailedInfo?.cashFlowStatement?.cashFlowToDebtRatio | number:'1.2-2' }}</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Trading Signals -->
+            <div class="trading-signals-card" *ngIf="shortTermSignal">
+              <h2>Trading Signals</h2>
+              
+              <div class="signal-item">
+                <div class="signal-label">Short Term Signal</div>
+                <div class="signal-value" [ngClass]="
+                  shortTermSignal.signal === 'BUY' ? 'positive' : 
+                  shortTermSignal.signal === 'SELL' ? 'negative' : 'neutral'
+                ">
+                  {{ shortTermSignal.signal }}
+                  <span class="signal-strength" *ngIf="shortTermSignal.strength">({{ shortTermSignal.strength }})</span>
+                </div>
+              </div>
+              
+              <div class="signal-details">
+                <div class="signal-detail-item">
+                  <div class="detail-label">Current Price</div>
+                  <div class="detail-value">
+                    {{ shortTermSignal.currentPrice | number:'1.2-2' }}
+                    <span class="currency">{{ shortTermSignal.currency || companyDetails?.currency || 'USD' }}</span>
+                  </div>
+                </div>
+                
+                <div class="signal-detail-item">
+                  <div class="detail-label">Target Price</div>
+                  <div class="detail-value" [ngClass]="shortTermSignal.signal === 'BUY' ? 'positive' : 'negative'">
+                    {{ shortTermSignal.targetPrice | number:'1.2-2' }}
+                    <span class="currency">{{ shortTermSignal.currency || companyDetails?.currency || 'USD' }}</span>
+                  </div>
+                </div>
+                
+                <div class="signal-detail-item">
+                  <div class="detail-label">Stop Loss</div>
+                  <div class="detail-value negative">
+                    {{ shortTermSignal.stopLoss | number:'1.2-2' }}
+                    <span class="currency">{{ shortTermSignal.currency || companyDetails?.currency || 'USD' }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="signal-reason" *ngIf="shortTermSignal.reason">
+                <p>{{ shortTermSignal.reason }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Company News Section -->
+          <div class="company-news-card">
+            <h2>Latest News</h2>
+            <div class="news-container" *ngIf="stockNews && stockNews.length > 0">
+              <div class="news-item" *ngFor="let news of stockNews">
+                <div class="news-date">{{ news.date | date:'mediumDate' }}</div>
+                <h3 class="news-title">
+                  <a [href]="news.url" target="_blank" rel="noopener noreferrer">{{ news.title }}</a>
+                </h3>
+                <div class="news-source">{{ news.source }}</div>
+                <p class="news-summary">{{ news.summary }}</p>
+              </div>
+            </div>
+            <div class="no-news-message" *ngIf="!stockNews || stockNews.length === 0">
+              <p>No recent news available for {{ symbol }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Technical Analysis Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'technical'">
+        <app-technical-analysis
+          [stockData]="stockData"
+          [technicalIndicators]="technicalIndicators"
+          [tradingView]="selectedTradingView"
+        ></app-technical-analysis>
+      </div>
+      
+      <!-- Fundamental Analysis Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'fundamental'">
+        <app-fundamental-analysis
+          [fundamentalData]="fundamentalData"
+        ></app-fundamental-analysis>
+      </div>
+      
+      <!-- AI Prediction Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'prediction'">
+        <app-prediction
+          [stockData]="stockData"
+          [predictionData]="predictionData"
+        ></app-prediction>
+      </div>
+    </div>
+  </ng-container>
+</div>

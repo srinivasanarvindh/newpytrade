@@ -1,0 +1,37 @@
+<div class="chart-container" [style.height]="height">
+  <div class="chart-header">
+    <h3 class="chart-title">{{ title }}</h3>
+    <div class="chart-actions" *ngIf="!isLoading">
+      <button class="chart-btn" (click)="chartType = 'candlestick'" [class.active]="chartType === 'candlestick'" title="Candlestick Chart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3v3M8 12v9M12 3v6M12 15v6M16 3v6M16 15v6M3 6h6M3 18h6M14 6h7M14 18h7"></path>
+        </svg>
+      </button>
+      <button class="chart-btn" (click)="chartType = 'area'" [class.active]="chartType === 'area'" title="Area Chart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18"></path>
+          <path d="M3 12l5-5 4 6 4-8 5 7"></path>
+        </svg>
+      </button>
+      <button class="chart-btn" (click)="chartType = 'line'" [class.active]="chartType === 'line'" title="Line Chart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18"></path>
+          <path d="M3 12l4-4 6 6 4-4 4 4"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <span>Loading chart data...</span>
+  </div>
+
+  <div *ngIf="!isLoading && priceData.length > 0" class="chart-body">
+    <canvas #chartCanvas id="stockChart"></canvas>
+  </div>
+
+  <div *ngIf="!isLoading && (!priceData || priceData.length === 0)" class="no-data-container">
+    <p class="no-data-message">No chart data available</p>
+  </div>
+</div>

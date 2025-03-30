@@ -1,0 +1,329 @@
+.technical-analysis-container {
+  .section-header {
+    margin-bottom: 20px;
+    
+    h2 {
+      font-size: 1.3rem;
+      color: #2a3f5a;
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+    
+    .trading-view-description {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.5;
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 4px;
+      border-left: 3px solid #1e88e5;
+      margin-top: 10px;
+    }
+  }
+  
+  .chart-section {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .indicators-summary {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    
+    .signal-summary {
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      
+      &.bullish {
+        background-color: rgba(76, 175, 80, 0.1);
+        border-left: 4px solid #4caf50;
+      }
+      
+      &.bearish {
+        background-color: rgba(244, 67, 54, 0.1);
+        border-left: 4px solid #f44336;
+      }
+      
+      &.neutral {
+        background-color: rgba(255, 152, 0, 0.1);
+        border-left: 4px solid #ff9800;
+      }
+      
+      .trend-label {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+      
+      .trend-value {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        
+        .bullish & {
+          color: #4caf50;
+        }
+        
+        .bearish & {
+          color: #f44336;
+        }
+        
+        .neutral & {
+          color: #ff9800;
+        }
+      }
+      
+      .strength-meter {
+        height: 8px;
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        
+        .strength-bar {
+          height: 100%;
+          border-radius: 4px;
+          
+          .bullish & {
+            background-color: #4caf50;
+          }
+          
+          .bearish & {
+            background-color: #f44336;
+          }
+          
+          .neutral & {
+            background-color: #ff9800;
+          }
+        }
+      }
+      
+      .trend-summary {
+        font-size: 0.9rem;
+        color: #555;
+        line-height: 1.5;
+      }
+    }
+    
+    .indicators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      
+      .indicator-card {
+        background-color: #f9f9f9;
+        border-radius: 4px;
+        padding: 15px;
+        
+        .indicator-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+          
+          .indicator-name {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+          }
+          
+          .indicator-signal {
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 3px;
+            
+            &.buy {
+              background-color: rgba(76, 175, 80, 0.2);
+              color: #4caf50;
+            }
+            
+            &.sell {
+              background-color: rgba(244, 67, 54, 0.2);
+              color: #f44336;
+            }
+            
+            &.neutral {
+              background-color: rgba(255, 152, 0, 0.2);
+              color: #ff9800;
+            }
+          }
+        }
+        
+        .indicator-value {
+          font-size: 1.2rem;
+          font-weight: 600;
+          margin-bottom: 10px;
+          color: #333;
+        }
+        
+        .indicator-description {
+          font-size: 0.85rem;
+          color: #666;
+          line-height: 1.4;
+        }
+      }
+    }
+    
+    .no-data-message {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      color: #666;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .support-resistance-section {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    
+    h3 {
+      font-size: 1.1rem;
+      color: #2a3f5a;
+      margin: 0 0 15px;
+      font-weight: 600;
+    }
+    
+    .levels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      
+      .level-card {
+        text-align: center;
+        padding: 15px 10px;
+        border-radius: 4px;
+        
+        &.support {
+          background-color: rgba(76, 175, 80, 0.1);
+          border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        &.resistance {
+          background-color: rgba(244, 67, 54, 0.1);
+          border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+        
+        .level-type {
+          font-size: 0.85rem;
+          font-weight: 500;
+          margin-bottom: 5px;
+          
+          .support & {
+            color: #4caf50;
+          }
+          
+          .resistance & {
+            color: #f44336;
+          }
+        }
+        
+        .level-value {
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin-bottom: 5px;
+          color: #333;
+        }
+        
+        .level-strength {
+          font-size: 0.8rem;
+          color: #666;
+        }
+      }
+    }
+  }
+  
+  .trading-strategy-section {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    
+    h3 {
+      font-size: 1.1rem;
+      color: #2a3f5a;
+      margin: 0 0 15px;
+      font-weight: 600;
+    }
+    
+    .strategy-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      
+      .strategy-card {
+        background-color: #f9f9f9;
+        border-radius: 6px;
+        padding: 15px;
+        
+        .strategy-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+          
+          h4 {
+            font-size: 1rem;
+            color: #333;
+            margin: 0;
+            font-weight: 600;
+          }
+          
+          .strategy-tag {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: 500;
+            
+            &.bullish {
+              background-color: rgba(76, 175, 80, 0.2);
+              color: #4caf50;
+            }
+            
+            &.bearish {
+              background-color: rgba(244, 67, 54, 0.2);
+              color: #f44336;
+            }
+            
+            &.neutral {
+              background-color: rgba(255, 152, 0, 0.2);
+              color: #ff9800;
+            }
+          }
+        }
+        
+        .strategy-description {
+          font-size: 0.9rem;
+          color: #555;
+          margin-bottom: 10px;
+          line-height: 1.5;
+        }
+        
+        .strategy-tips {
+          ul {
+            margin: 0;
+            padding-left: 20px;
+            
+            li {
+              font-size: 0.85rem;
+              color: #666;
+              margin-bottom: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

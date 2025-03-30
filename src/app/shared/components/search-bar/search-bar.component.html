@@ -1,0 +1,35 @@
+<div class="w-full">
+  <form (ngSubmit)="onSubmit()">
+    <div class="relative">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Search for stocks</mat-label>
+        <input type="text" 
+               matInput 
+               [formControl]="searchControl" 
+               [matAutocomplete]="auto" 
+               placeholder="e.g., AAPL, MSFT, GOOGL">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event.option.value)">
+          <ng-container *ngIf="isLoading">
+            <mat-option disabled>
+              <div class="flex justify-center">
+                <mat-spinner diameter="24"></mat-spinner>
+              </div>
+            </mat-option>
+          </ng-container>
+          <ng-container *ngIf="(filteredOptions | async)?.length === 0 && !isLoading">
+            <mat-option disabled>No stocks found</mat-option>
+          </ng-container>
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            <div class="flex justify-between items-center">
+              <span class="font-medium">{{ option.symbol }}</span>
+              <span class="text-sm text-gray-600 truncate">{{ option.companyName }}</span>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+        <button type="submit" matSuffix mat-icon-button aria-label="Search">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </form>
+</div>

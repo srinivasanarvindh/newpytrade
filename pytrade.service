@@ -1,0 +1,19 @@
+[Unit]
+Description=PyTrade AI Trading Platform
+After=network.target
+
+[Service]
+User=apps.pykara.ai
+Group=apps.pykara.ai
+WorkingDirectory=/home/apps.pykara.ai/public_html/py-trade
+Environment="PATH=/home/apps.pykara.ai/pytrade_venv/bin"
+ExecStart=/home/apps.pykara.ai/pytrade_venv/bin/python /home/apps.pykara.ai/public_html/py-trade/attached_assets/simplified_pytrade.py
+Restart=always
+RestartSec=10
+
+# Log files
+StandardOutput=append:/home/apps.pykara.ai/logs/pytrade/pytrade_stdout.log
+StandardError=append:/home/apps.pykara.ai/logs/pytrade/pytrade_stderr.log
+
+[Install]
+WantedBy=multi-user.target

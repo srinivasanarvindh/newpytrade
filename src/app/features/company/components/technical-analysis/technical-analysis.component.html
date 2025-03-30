@@ -1,0 +1,147 @@
+<div class="technical-analysis-container mb-6">
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="p-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold">Technical Analysis</h2>
+      <p class="text-sm text-gray-600 mt-1">
+        Analysis and indicators relevant for {{ tradingTerm }} trading
+      </p>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoading" class="p-4">
+      <!-- Trading Signal Card -->
+      <div class="signal-card mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div class="flex items-center">
+            <div [ngClass]="{
+              'bg-success': overallSignal === 'Buy',
+              'bg-error': overallSignal === 'Sell',
+              'bg-gray-400': overallSignal === 'Neutral'
+            }" class="w-12 h-12 rounded-full flex items-center justify-center text-white mr-4">
+              <mat-icon *ngIf="overallSignal === 'Buy'">trending_up</mat-icon>
+              <mat-icon *ngIf="overallSignal === 'Sell'">trending_down</mat-icon>
+              <mat-icon *ngIf="overallSignal === 'Neutral'">remove</mat-icon>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold">{{ overallSignal }} Signal</h3>
+              <p class="text-sm text-gray-600">{{ signalConfidence }} confidence level</p>
+            </div>
+          </div>
+          <div class="signal-strength mt-4 md:mt-0">
+            <div class="progress-label flex justify-between text-sm">
+              <span>Bearish</span>
+              <span>Neutral</span>
+              <span>Bullish</span>
+            </div>
+            <div class="progress-bar mt-1">
+              <div class="bg-gray-200 rounded-full h-2 w-full">
+                <div [ngClass]="{
+                  'bg-success': signalStrength > 60,
+                  'bg-warning': signalStrength >= 40 && signalStrength <= 60,
+                  'bg-error': signalStrength < 40
+                }" class="rounded-full h-2" [style.width.%]="signalStrength"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Indicators Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div *ngFor="let indicator of technicalIndicators" class="indicator-card p-4 border border-gray-200 rounded-lg">
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="font-medium">{{ indicator.name }}</h4>
+              <div class="flex items-center">
+                <span class="text-lg font-bold mr-2">{{ indicator.value }}</span>
+                <span [ngClass]="{
+                  'text-success': indicator.status === 'bullish',
+                  'text-error': indicator.status === 'bearish',
+                  'text-gray-500': indicator.status === 'neutral'
+                }" class="text-sm">{{ indicator.interpretation }}</span>
+              </div>
+            </div>
+            <mat-icon [matTooltip]="indicator.description" class="text-gray-400 cursor-help">info_outline</mat-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- RSI & MACD Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <app-rsi-indicator [rsiData]="rsiData" [isLoading]="isLoadingRSI"></app-rsi-indicator>
+        <app-macd-indicator [macdData]="macdData" [isLoading]="isLoadingMACD"></app-macd-indicator>
+      </div>
+
+      <!-- Trading Term-Specific Analysis -->
+      <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+        <h3 class="font-semibold mb-3">{{ tradingTerm | titlecase }} Trading Analysis</h3>
+        
+        <div *ngIf="tradingTerm === 'intraday'" class="text-sm text-gray-700">
+          <p>Intraday trading focuses on short-term price movements within a single trading day. Key indicators like RSI and MACD can help identify potential entry and exit points.</p>
+          <ul class="list-disc ml-5 mt-2">
+            <li>Look for RSI crossing above 30 (oversold) or below 70 (overbought) for potential reversal signals</li>
+            <li>MACD crossovers can indicate short-term momentum shifts</li>
+            <li>Monitor shorter-term moving averages for intraday trend direction</li>
+          </ul>
+        </div>
+        
+        <div *ngIf="tradingTerm === 'swing'" class="text-sm text-gray-700">
+          <p>Swing trading targets price movements over several days to weeks. Focus on momentum indicators and support/resistance levels.</p>
+          <ul class="list-disc ml-5 mt-2">
+            <li>Monitor price action in relation to the 20-day and 50-day moving averages</li>
+            <li>Look for MACD histogram reversals for potential swing signals</li>
+            <li>RSI divergence can indicate potential swing points</li>
+          </ul>
+        </div>
+        
+        <div *ngIf="tradingTerm === 'scalping'" class="text-sm text-gray-700">
+          <p>Scalping focuses on profiting from small price changes, typically using 1-minute to 15-minute charts.</p>
+          <ul class="list-disc ml-5 mt-2">
+            <li>Focus on very short-term indicators and price action</li>
+            <li>Volume spikes can indicate potential scalping opportunities</li>
+            <li>ATR can help determine appropriate stop-loss levels for scalping</li>
+          </ul>
+        </div>
+        
+        <div *ngIf="tradingTerm === 'positional'" class="text-sm text-gray-700">
+          <p>Positional trading involves holding positions for several weeks to months. Focus on the stronger trends and broader market conditions.</p>
+          <ul class="list-disc ml-5 mt-2">
+            <li>50-day and 200-day moving averages are important trend indicators</li>
+            <li>Look for weekly chart patterns and indicators</li>
+            <li>Monitor longer-term support and resistance levels</li>
+          </ul>
+        </div>
+        
+        <div *ngIf="tradingTerm === 'long_term'" class="text-sm text-gray-700">
+          <p>Long-term investment focuses on fundamental analysis, but technical analysis can help identify optimal entry points.</p>
+          <ul class="list-disc ml-5 mt-2">
+            <li>200-day moving average is a key indicator for long-term trend</li>
+            <li>Look for deep value zones (oversold conditions) for entry points</li>
+            <li>Monthly and quarterly chart patterns are more relevant than daily movements</li>
+          </ul>
+        </div>
+        
+        <div *ngIf="tradingTerm === 'options_futures'" class="text-sm text-gray-700">
+          <p>Options and futures trading requires specialized analysis of volatility and time decay.</p>
+          <ul class="list-disc ml-5 mt-2">
+            <li>Implied Volatility is a crucial metric for options strategies</li>
+            <li>Monitor ATR for potential options strike selection</li>
+            <li>Look for momentum indicators to time entries and exits</li>
+          </ul>
+        </div>
+        
+        <div *ngIf="tradingTerm === 'ai_trading'" class="text-sm text-gray-700">
+          <p>AI Trading combines multiple technical indicators with machine learning models to generate trading signals.</p>
+          <ul class="list-disc ml-5 mt-2">
+            <li>AI-generated signals consider hundreds of data points and historical patterns</li>
+            <li>Machine learning models adapt to changing market conditions</li>
+            <li>Combined with traditional technical analysis for confirmation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

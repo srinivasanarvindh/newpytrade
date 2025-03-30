@@ -1,0 +1,686 @@
+/* Improved styling for swing-trading.component.css to match Smart Trade page */
+
+.intraday-container {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  gap: 1.5rem;
+  font-family: "IBM Plex Sans", sans-serif !important;
+}
+
+/* Background Image with overlay */
+.intradayBg {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(0.3);
+}
+
+/* Add a subtle background overlay */
+.intraday-container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+}
+
+/* Top Section Layout */
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  align-items: center;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+
+/* Page Title */
+.title-container {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #1e88e5;
+  text-align: center;
+  width: 100%;
+}
+
+.swinglist-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.swing-btns {
+  background: #1e88e5;
+  color: white;
+  font-size: 16px;
+  border-radius: 4px;
+  padding: 12px 20px;
+  transition: all 0.2s ease-in-out;
+  font-weight: bold; 
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 160px;
+  height: 50px;
+}
+
+/* Styling for the navigation button next to tickers */
+.navigate-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  height: 12px;
+  width: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  overflow: hidden;
+}
+
+.navigate-btn .material-icons {
+  font-size: 10px !important; /* Further reduced size */
+  color: #1e88e5;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  width: 10px;
+  height: 10px;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigate-btn:hover .material-icons {
+  opacity: 1;
+}
+
+.swing-btns:hover {
+  transform: scale(1.03);
+  background: #106cc8;
+}
+
+.swing-btns:disabled {
+  background-color: #cccccc !important;
+  color: #666666 !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+  transform: none;
+}
+
+.swing-btns.active-btn {
+  background-color: #0d47a1; /* Darker blue for better contrast */
+  box-shadow: 0 0 10px rgba(29, 136, 229, 0.8);
+  transform: scale(1.08);
+  position: relative;
+  font-weight: 700;
+  border: 2px solid #ffffff;
+}
+
+.swing-btns.active-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 4px;
+  background-color: #ffffff;
+  border-radius: 3px;
+}
+
+.predictContainer {
+  display: flex;  
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.analysis-panel {
+  width: 60%;
+  background-color: #f5f9ff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-width: 280px;
+}
+
+.results-panel {
+  width: 35%;
+  background-color: #f5f9ff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 280px;
+}
+
+/* Material Spinner */
+mat-spinner {
+  margin: 2rem auto;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.loading-overlay p {
+  color: white;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.loading-timer {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #f5f5f5;
+}
+
+.loading-message {
+  margin-top: 5px;
+  font-size: 16px;
+  color: #f8bbd0;
+  font-weight: 500;
+}
+
+.loading-timer {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #eee;
+}
+
+.loading-note {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #ffcc00;
+  max-width: 400px;
+  text-align: center;
+}
+
+.error-container {
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+  padding: 30px;
+  margin: 20px auto;
+  max-width: 600px;
+  color: #fff;
+  border: 1px solid #ff4444;
+  text-align: center;
+}
+
+.error-message h3 {
+  color: #ff4444;
+  margin-bottom: 15px;
+}
+
+.error-message p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.error-suggestions {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.error-suggestions ul {
+  margin-left: 25px;
+  margin-top: 10px;
+}
+
+.error-suggestions li {
+  margin-bottom: 5px;
+}
+
+.retry-btn {
+  background: #2c71d3;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.retry-btn:hover {
+  background: #2055a0;
+}
+
+.chart-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(249, 249, 249, 0.9);
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.chart-loading-overlay p {
+  margin-top: 15px;
+  color: #666;
+}
+
+/* Ensure the chart container has proper positioning */
+#chart-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+
+/* Make sure canvas is visible and properly sized */
+canvas#prediction-chart-0 {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 400px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px 15px;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+  font-size: 14px;
+}
+
+th {
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #f0f4f8;
+  color: #1e88e5;
+  font-size: 14px;
+}
+
+tr:hover {
+  background-color: #f5f9ff;
+}
+
+.analysis-box {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  min-height: 500px;
+}
+
+.analysis-box h3 {
+  margin: 0 0 10px 0;
+  color: #1e88e5;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.pagination-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.prev-nxt-btn {
+  background-color: #1e88e5;
+  min-width: 80px;
+  padding: 8px 15px;
+  height: auto;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.prev-nxt-btn:hover:not(:disabled) {
+  background-color: #106cc8;
+  transform: translateY(-1px);
+}
+
+.prev-nxt-btn:disabled {
+  background-color: #cccccc;
+  color: white;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.page-no {
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.status-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.green {
+  background-color: #4CAF50;
+}
+
+.red {
+  background-color: #f44336;
+}
+
+.yellow {
+  background-color: #FFC107;
+}
+
+.ticker-sym {
+  cursor: pointer;
+  color: #1e88e5 !important;
+  font-weight: bold !important;
+  text-decoration: underline;
+}
+
+.news-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+  font-size: 14px;
+  padding: 0.5rem;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+/* Indicators explanation styling */
+.indicators-explanation {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f0f8ff;
+  border-radius: 8px;
+  border-left: 4px solid #1e88e5;
+  text-align: left;
+}
+
+.indicators-explanation h4 {
+  color: #1e88e5;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.indicators-explanation ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.indicators-explanation li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+  font-size: 14px;
+  color: #333;
+}
+
+.color-indicators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.color-indicators div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.color-box {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+}
+
+/* Style adjustments for mobile */
+@media (max-width: 768px) {
+  .indicators-explanation {
+    padding: 10px;
+  }
+  
+  .indicators-explanation li {
+    font-size: 13px;
+  }
+  
+  .color-indicators {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Back to Smart Trade button container */
+.back-btn-container {
+  text-align: center;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.back-to-smart-trade-btn {
+  background-color: #1e88e5;
+  color: white;
+  font-size: 16px;
+  padding: 12px 25px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.back-to-smart-trade-btn:hover {
+  background-color: #106cc8;
+  transform: scale(1.03);
+}
+
+/* Responsive fixes */
+@media (max-width: 992px) {
+  .predictContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .analysis-panel, .results-panel {
+    width: 100%;
+  }
+  
+  .swing-btns {
+    font-size: 14px;
+    padding: 10px 15px;
+    width: 140px;
+  }
+  
+  .title-container {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .swinglist-container {
+    flex-wrap: wrap;
+  }
+  
+  .title-container {
+    font-size: 1.5rem;
+  }
+}
+
+/* Add styled error message */
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  text-align: center;
+}
+
+.error-icon {
+  margin-bottom: 15px;
+}
+
+.error-icon .material-icons {
+  font-size: 48px;
+  color: #e74c3c;
+}
+
+.error-content h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.error-content p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.retry-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: #2980b9;
+}
+
+.retry-button .material-icons {
+  margin-right: 6px;
+  font-size: 18px;
+}
+
+.loading-hint {
+  font-size: 14px;
+  color: #666;
+  margin-top: 15px;
+}
+
+.loading-overlay p {
+  margin: 10px 0;
+}
+
+/* Live data note styling - enhanced */
+.live-data-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(33, 150, 243, 0.15);
+  border-radius: 4px;
+  padding: 12px 18px;
+  margin: 0 auto 25px;
+  max-width: 650px;
+  border-left: 4px solid #2196F3;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.live-data-note .material-icons {
+  color: #2196F3;
+  margin-right: 15px;
+  font-size: 22px;
+}
+
+.live-data-note p {
+  margin: 0;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.live-data-note strong {
+  color: #1565C0;
+  font-weight: 600;
+}

@@ -1,0 +1,152 @@
+[
+  {
+    "change": 15.0,
+    "changePercent": 2.0,
+    "company": "Adani Ports and Special Economic Zone Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 780.0,
+    "sector": "Infrastructure",
+    "symbol": "ADANIPORTS"
+  },
+  {
+    "change": -12.0,
+    "changePercent": -1.0,
+    "company": "HCL Technologies Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 1180.0,
+    "sector": "IT",
+    "symbol": "HCLTECH"
+  },
+  {
+    "change": 80.0,
+    "changePercent": 1.6,
+    "company": "Dr. Reddy's Laboratories Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 5200.0,
+    "sector": "Healthcare",
+    "symbol": "DRREDDY"
+  },
+  {
+    "change": -15.0,
+    "changePercent": -1.2,
+    "company": "Cipla Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 1280.0,
+    "sector": "Healthcare",
+    "symbol": "CIPLA"
+  },
+  {
+    "change": 50.0,
+    "changePercent": 1.5,
+    "company": "Eicher Motors Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 3400.0,
+    "sector": "Automobile",
+    "symbol": "EICHERMOT"
+  },
+  {
+    "change": -65.0,
+    "changePercent": -1.4,
+    "company": "Britannia Industries Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 4600.0,
+    "sector": "FMCG",
+    "symbol": "BRITANNIA"
+  },
+  {
+    "change": 25.0,
+    "changePercent": 1.3,
+    "company": "Grasim Industries Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 1950.0,
+    "sector": "Diversified",
+    "symbol": "GRASIM"
+  },
+  {
+    "change": -70.0,
+    "changePercent": -1.5,
+    "company": "Bajaj Auto Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 4800.0,
+    "sector": "Automobile",
+    "symbol": "BAJAJ-AUTO"
+  },
+  {
+    "change": 35.0,
+    "changePercent": 1.2,
+    "company": "Hero MotoCorp Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 2850.0,
+    "sector": "Automobile",
+    "symbol": "HEROMOTOCO"
+  },
+  {
+    "change": -45.0,
+    "changePercent": -1.3,
+    "company": "Divi's Laboratories Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 3600.0,
+    "sector": "Healthcare",
+    "symbol": "DIVISLAB"
+  },
+  {
+    "change": 15.0,
+    "changePercent": 1.6,
+    "company": "Aurobindo Pharma Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 960.0,
+    "sector": "Healthcare",
+    "symbol": "AUROPHARMA"
+  },
+  {
+    "change": 22.0,
+    "changePercent": 1.9,
+    "company": "Lupin Limited",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 1150.0,
+    "sector": "Healthcare",
+    "symbol": "LUPIN"
+  },
+  {
+    "change": 8.0,
+    "changePercent": 1.5,
+    "company": "Dabur India Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 550.0,
+    "sector": "FMCG",
+    "symbol": "DABUR"
+  },
+  {
+    "change": 18.0,
+    "changePercent": 1.9,
+    "company": "Godrej Consumer Products Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 980.0,
+    "sector": "FMCG",
+    "symbol": "GODREJCP"
+  },
+  {
+    "change": 9.5,
+    "changePercent": 1.8,
+    "company": "Marico Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 530.0,
+    "sector": "FMCG",
+    "symbol": "MARICO"
+  }
+]

@@ -1,0 +1,92 @@
+modules = ["python-3.11", "nodejs-20", "python3"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Swing Trading Backend"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Flask Backend"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Angular Frontend"
+
+[[workflows.workflow]]
+name = "Swing Trading Backend"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
+waitForPort = 5010
+
+[[workflows.workflow]]
+name = "Flask Backend"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd attached_assets && python simplified_pytrade.py"
+waitForPort = 5001
+
+[[workflows.workflow]]
+name = "Angular Frontend"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd . && npx ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --port 5000 --disable-host-check"
+waitForPort = 5000
+
+[deployment]
+run = ["sh", "-c", "cd attached_assets && python pytrade.py"]
+
+[[ports]]
+localPort = 5000
+externalPort = 5000
+
+[[ports]]
+localPort = 5001
+externalPort = 80
+
+[[ports]]
+localPort = 5002
+externalPort = 3000
+
+[[ports]]
+localPort = 5003
+externalPort = 3001
+
+[[ports]]
+localPort = 5010
+externalPort = 3002

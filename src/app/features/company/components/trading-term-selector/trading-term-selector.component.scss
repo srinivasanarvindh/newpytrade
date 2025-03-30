@@ -1,0 +1,19 @@
+.trading-term-selector {
+  @apply w-full;
+}
+
+.trading-tabs {
+  @apply py-3 border-b border-gray-200 bg-gray-50;
+}
+
+.trading-tab {
+  @apply px-4 py-2 text-sm font-medium rounded-t-lg transition-colors duration-200 focus:outline-none;
+  
+  &:not(.active) {
+    @apply text-gray-600 hover:bg-gray-100;
+  }
+  
+  &.active {
+    @apply text-primary bg-white border-b-2 border-primary;
+  }
+}

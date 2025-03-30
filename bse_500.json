@@ -1,0 +1,152 @@
+[
+  {
+    "change": 12.35,
+    "changePercent": 3.71,
+    "company": "Adani Power Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 345.2,
+    "sector": "Power",
+    "symbol": "ADANIPOWER"
+  },
+  {
+    "change": 8.25,
+    "changePercent": 2.0,
+    "company": "Canara Bank",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 420.15,
+    "sector": "Banking",
+    "symbol": "CANBK"
+  },
+  {
+    "change": 2.15,
+    "changePercent": 1.79,
+    "company": "Indian Oil Corporation Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 122.6,
+    "sector": "Oil & Gas",
+    "symbol": "IOC"
+  },
+  {
+    "change": 7.85,
+    "changePercent": 2.45,
+    "company": "Tata Power Company Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 328.75,
+    "sector": "Power",
+    "symbol": "TATAPOWER"
+  },
+  {
+    "change": 4.2,
+    "changePercent": 1.12,
+    "company": "Coal India Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 380.25,
+    "sector": "Mining",
+    "symbol": "COALINDIA"
+  },
+  {
+    "change": 5.6,
+    "changePercent": 2.49,
+    "company": "Bank of Baroda",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 230.45,
+    "sector": "Banking",
+    "symbol": "BANKBARODA"
+  },
+  {
+    "change": 9.3,
+    "changePercent": 3.14,
+    "company": "Vedanta Limited",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 305.15,
+    "sector": "Mining",
+    "symbol": "VEDL"
+  },
+  {
+    "change": 6.85,
+    "changePercent": 2.5,
+    "company": "REC Limited",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 280.9,
+    "sector": "Finance",
+    "symbol": "RECLTD"
+  },
+  {
+    "change": 1.45,
+    "changePercent": 2.27,
+    "company": "NHPC Limited",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 65.3,
+    "sector": "Power",
+    "symbol": "NHPC"
+  },
+  {
+    "change": 3.8,
+    "changePercent": 2.15,
+    "company": "NMDC Limited",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 180.55,
+    "sector": "Mining",
+    "symbol": "NMDC"
+  },
+  {
+    "change": 12.4,
+    "changePercent": 2.26,
+    "company": "Hindalco Industries Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 560.25,
+    "sector": "Metals",
+    "symbol": "HINDALCO"
+  },
+  {
+    "change": 4.25,
+    "changePercent": 1.76,
+    "company": "Oil and Natural Gas Corporation Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 245.35,
+    "sector": "Oil & Gas",
+    "symbol": "ONGC"
+  },
+  {
+    "change": 8.3,
+    "changePercent": 2.75,
+    "company": "Power Finance Corporation Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 310.45,
+    "sector": "Finance",
+    "symbol": "PFC"
+  },
+  {
+    "change": 2.45,
+    "changePercent": 2.27,
+    "company": "Steel Authority of India Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 110.25,
+    "sector": "Metals",
+    "symbol": "SAIL"
+  },
+  {
+    "change": 3.25,
+    "changePercent": 3.41,
+    "company": "Indian Railway Finance Corporation Ltd.",
+    "currency": "INR",
+    "exchange": "BSE",
+    "price": 98.45,
+    "sector": "Finance",
+    "symbol": "IRFC"
+  }
+]

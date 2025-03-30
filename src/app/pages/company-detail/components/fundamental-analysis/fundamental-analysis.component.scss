@@ -1,0 +1,580 @@
+.fundamental-analysis-container {
+  .section-header {
+    margin-bottom: 20px;
+    
+    h2 {
+      font-size: 1.3rem;
+      color: #2a3f5a;
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+    
+    .section-description {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.5;
+    }
+  }
+  
+  .overall-rating-card {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    
+    .rating-score-section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .rating-dial {
+        margin-right: 30px;
+        
+        @media (max-width: 768px) {
+          margin-right: 0;
+          margin-bottom: 20px;
+          align-self: center;
+        }
+        
+        .dial-container {
+          width: 100px;
+          height: 100px;
+          position: relative;
+          margin-bottom: 10px;
+          
+          .dial-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 10px solid #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            
+            .dial-value {
+              font-size: 1.8rem;
+              font-weight: 700;
+              color: #2a3f5a;
+            }
+            
+            .dial-label {
+              font-size: 0.8rem;
+              color: #666;
+            }
+          }
+        }
+        
+        .dial-meter {
+          height: 10px;
+          background-color: #e0e0e0;
+          border-radius: 5px;
+          width: 100px;
+          overflow: hidden;
+          
+          .dial-fill {
+            height: 100%;
+            border-radius: 5px;
+            
+            &.strong.buy {
+              background-color: #388e3c;
+            }
+            
+            &.buy {
+              background-color: #4caf50;
+            }
+            
+            &.neutral {
+              background-color: #ff9800;
+            }
+            
+            &.sell {
+              background-color: #f44336;
+            }
+            
+            &.strong.sell {
+              background-color: #c62828;
+            }
+          }
+        }
+      }
+      
+      .rating-interpretation {
+        flex: 1;
+        
+        .interpretation-label {
+          font-size: 0.9rem;
+          color: #666;
+          margin-bottom: 5px;
+        }
+        
+        .interpretation-value {
+          font-size: 1.8rem;
+          font-weight: 600;
+          margin-bottom: 10px;
+          
+          &.strong.buy {
+            color: #388e3c;
+          }
+          
+          &.buy {
+            color: #4caf50;
+          }
+          
+          &.neutral {
+            color: #ff9800;
+          }
+          
+          &.sell {
+            color: #f44336;
+          }
+          
+          &.strong.sell {
+            color: #c62828;
+          }
+        }
+        
+        .interpretation-desc {
+          font-size: 0.9rem;
+          color: #555;
+          line-height: 1.5;
+        }
+      }
+    }
+    
+    .rating-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      
+      .category-item {
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        padding: 10px 15px;
+        min-width: 120px;
+        
+        .category-label {
+          font-size: 0.85rem;
+          color: #666;
+          margin-bottom: 5px;
+        }
+        
+        .category-value {
+          font-size: 1.1rem;
+          font-weight: 600;
+          
+          &.undervalued, &.strong {
+            color: #4caf50;
+          }
+          
+          &.fairly.valued, &.moderate {
+            color: #ff9800;
+          }
+          
+          &.overvalued, &.weak {
+            color: #f44336;
+          }
+          
+          &.unknown {
+            color: #9e9e9e;
+          }
+        }
+      }
+    }
+  }
+  
+  .metrics-card {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    
+    h3.metrics-category {
+      font-size: 1.1rem;
+      color: #2a3f5a;
+      margin: 0 0 15px;
+      font-weight: 600;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 10px;
+    }
+    
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      
+      .metric-item {
+        background-color: #f9f9f9;
+        border-radius: 4px;
+        padding: 15px;
+        
+        .metric-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+          
+          .metric-name {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+          }
+          
+          .metric-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            
+            &.positive {
+              background-color: rgba(76, 175, 80, 0.2);
+              color: #4caf50;
+            }
+            
+            &.negative {
+              background-color: rgba(244, 67, 54, 0.2);
+              color: #f44336;
+            }
+            
+            &.neutral {
+              background-color: rgba(255, 152, 0, 0.2);
+              color: #ff9800;
+            }
+          }
+        }
+        
+        .metric-value {
+          font-size: 1.4rem;
+          font-weight: 600;
+          margin-bottom: 10px;
+          color: #333;
+          
+          &.not-available {
+            color: #9e9e9e;
+            font-size: 1rem;
+            font-style: italic;
+          }
+        }
+        
+        .metric-interpretation {
+          font-size: 0.85rem;
+          color: #666;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+  
+  .financial-statements-card {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    
+    h3 {
+      font-size: 1.1rem;
+      color: #2a3f5a;
+      margin: 0 0 15px;
+      font-weight: 600;
+    }
+    
+    .statements-tabs {
+      .tab-buttons {
+        display: flex;
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 20px;
+        
+        .tab-btn {
+          background: transparent;
+          border: none;
+          padding: 10px 15px;
+          font-size: 0.9rem;
+          color: #666;
+          cursor: pointer;
+          position: relative;
+          
+          &.active {
+            color: #1e88e5;
+            font-weight: 500;
+            
+            &:after {
+              content: '';
+              position: absolute;
+              bottom: -1px;
+              left: 0;
+              right: 0;
+              height: 2px;
+              background-color: #1e88e5;
+            }
+          }
+        }
+      }
+      
+      .tab-content {
+        display: none;
+        
+        &.active {
+          display: block;
+        }
+        
+        .financial-data-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 20px;
+          
+          .data-group {
+            h4 {
+              font-size: 1rem;
+              color: #333;
+              margin: 0 0 10px;
+              font-weight: 500;
+            }
+            
+            .data-item {
+              margin-bottom: 8px;
+              
+              .data-label {
+                font-size: 0.85rem;
+                color: #666;
+                margin-bottom: 3px;
+              }
+              
+              .data-value {
+                font-size: 1rem;
+                color: #333;
+                font-weight: 500;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .investment-recommendation-card {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    
+    h3 {
+      font-size: 1.1rem;
+      color: #2a3f5a;
+      margin: 0 0 15px;
+      font-weight: 600;
+    }
+    
+    .recommendation-content {
+      .recommendation-summary {
+        display: flex;
+        margin-bottom: 20px;
+        
+        @media (max-width: 768px) {
+          flex-direction: column;
+        }
+        
+        .recommendation-badge {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 120px;
+          height: 40px;
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 1rem;
+          margin-right: 20px;
+          
+          @media (max-width: 768px) {
+            margin-right: 0;
+            margin-bottom: 15px;
+            align-self: flex-start;
+          }
+          
+          &.strong.buy {
+            background-color: rgba(56, 142, 60, 0.2);
+            color: #388e3c;
+          }
+          
+          &.buy {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+          }
+          
+          &.neutral {
+            background-color: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+          }
+          
+          &.sell {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+          }
+          
+          &.strong.sell {
+            background-color: rgba(198, 40, 40, 0.2);
+            color: #c62828;
+          }
+        }
+        
+        .recommendation-text {
+          flex: 1;
+          
+          p {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0 0 10px;
+            
+            .highlight {
+              font-weight: 600;
+              
+              &.positive {
+                color: #4caf50;
+              }
+              
+              &.neutral {
+                color: #ff9800;
+              }
+              
+              &.negative {
+                color: #f44336;
+              }
+              
+              &.strong {
+                color: #4caf50;
+              }
+              
+              &.moderate {
+                color: #ff9800;
+              }
+              
+              &.weak {
+                color: #f44336;
+              }
+              
+              &.undervalued {
+                color: #4caf50;
+              }
+              
+              &.fairly.valued {
+                color: #ff9800;
+              }
+              
+              &.overvalued {
+                color: #f44336;
+              }
+            }
+          }
+          
+          .recommendation-disclaimer {
+            font-size: 0.8rem;
+            color: #888;
+            font-style: italic;
+          }
+        }
+      }
+      
+      .investor-highlights {
+        background-color: #f9f9f9;
+        border-radius: 4px;
+        padding: 15px;
+        
+        h4 {
+          font-size: 1rem;
+          color: #333;
+          margin: 0 0 15px;
+          font-weight: 500;
+        }
+        
+        .highlights-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 15px;
+          
+          .highlight-item {
+            display: flex;
+            align-items: flex-start;
+            
+            .highlight-icon {
+              margin-right: 10px;
+              margin-top: 2px;
+              
+              &.positive {
+                color: #4caf50;
+              }
+              
+              &.negative {
+                color: #f44336;
+              }
+              
+              &.neutral {
+                color: #ff9800;
+              }
+            }
+            
+            .highlight-text {
+              flex: 1;
+              font-size: 0.9rem;
+              color: #555;
+              line-height: 1.4;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .no-data-container {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 40px 20px;
+    text-align: center;
+    
+    .no-data-icon {
+      margin-bottom: 20px;
+      color: #9e9e9e;
+    }
+    
+    h3 {
+      font-size: 1.3rem;
+      color: #333;
+      margin: 0 0 15px;
+      font-weight: 600;
+    }
+    
+    p {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 15px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    ul {
+      display: inline-block;
+      text-align: left;
+      margin: 0;
+      padding-left: 20px;
+      
+      li {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 5px;
+      }
+    }
+  }
+}

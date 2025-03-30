@@ -1,0 +1,219 @@
+<div class="prediction-container">
+  <div class="section-header">
+    <h2>AI Price Prediction</h2>
+    <div class="section-description">
+      Machine learning forecast of potential future price movements based on historical patterns and technical indicators.
+    </div>
+  </div>
+  
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <app-loading-spinner></app-loading-spinner>
+    <p>Analyzing data and generating predictions...</p>
+  </div>
+  
+  <!-- Error State -->
+  <div *ngIf="!isLoading && error" class="error-container">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <h3>{{ error }}</h3>
+    <p>Our AI models require sufficient historical data to generate accurate predictions. This stock may be newly listed or have limited trading history.</p>
+    
+    <div class="prediction-placeholder">
+      <div class="placeholder-section">
+        <h4>Prediction Overview</h4>
+        <div class="placeholder-grid">
+          <div class="placeholder-item">
+            <div class="placeholder-label">Forecast Direction</div>
+            <div class="placeholder-value">-</div>
+          </div>
+          <div class="placeholder-item">
+            <div class="placeholder-label">Next 30 Days</div>
+            <div class="placeholder-value">-</div>
+          </div>
+          <div class="placeholder-item">
+            <div class="placeholder-label">Confidence Level</div>
+            <div class="placeholder-value">-</div>
+          </div>
+          <div class="placeholder-item">
+            <div class="placeholder-label">Historical Accuracy</div>
+            <div class="placeholder-value">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Prediction Content -->
+  <ng-container *ngIf="!isLoading && !error && predictionData">
+    <!-- Prediction Summary Card -->
+    <div class="prediction-summary-card">
+      <div class="prediction-indicator" [ngClass]="predictionSummary.direction">
+        <div class="direction-icon">
+          <svg *ngIf="predictionSummary.direction === 'up'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <svg *ngIf="predictionSummary.direction === 'down'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-down">
+            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+            <polyline points="17 18 23 18 23 12"></polyline>
+          </svg>
+          <svg *ngIf="predictionSummary.direction === 'neutral'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </div>
+        <div class="prediction-info">
+          <div class="prediction-label">
+            {{ predictionSummary.direction === 'up' ? 'Bullish' : 
+               predictionSummary.direction === 'down' ? 'Bearish' : 'Neutral' }} Prediction
+          </div>
+          <div class="prediction-value">
+            {{ predictionSummary.percentChange | number:'1.2-2' }}% 
+            {{ predictionSummary.direction === 'up' ? 'Upside' : 
+               predictionSummary.direction === 'down' ? 'Downside' : 'Change' }}
+          </div>
+          <div class="prediction-period">
+            over next {{ predictionSummary.daysAhead }} days
+          </div>
+        </div>
+      </div>
+      
+      <div class="prediction-metrics">
+        <div class="metric-item">
+          <div class="metric-label">Confidence</div>
+          <div class="metric-value">{{ predictionSummary.confidence }}%</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Historical Accuracy</div>
+          <div class="metric-value">{{ accuracyMetrics.historicalAccuracy }}%</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Mean Error</div>
+          <div class="metric-value">±{{ accuracyMetrics.meanError }}%</div>
+        </div>
+      </div>
+      
+      <div class="prediction-description">
+        {{ predictionSummary.interpretation }}
+      </div>
+    </div>
+    
+    <!-- Prediction Chart -->
+    <div class="prediction-chart-card">
+      <h3>Price Prediction Chart</h3>
+      
+      <div class="chart-container">
+        <app-chart 
+          [stockData]="stockData" 
+          [chartType]="'line'" 
+          [timeframe]="'1m'"
+          [showVolume]="false"
+          [predictions]="predictionData && predictionData.predictions ? predictionData.predictions : null"
+          [predictionDates]="predictionData && predictionData.dates ? predictionData.dates : null"
+        ></app-chart>
+      </div>
+    </div>
+    
+    <!-- AI Analysis -->
+    <div class="ai-analysis-card">
+      <h3>AI Analysis</h3>
+      
+      <div class="analysis-summary">
+        {{ aiSummary }}
+      </div>
+      
+      <div class="analysis-factors">
+        <div class="factor-item">
+          <div class="factor-header">
+            <div class="factor-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+            <h4>Technical Factors</h4>
+          </div>
+          <div class="factor-content">
+            {{ technicalFactors }}
+          </div>
+        </div>
+        
+        <div class="factor-item">
+          <div class="factor-header">
+            <div class="factor-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
+            <h4>Fundamental Factors</h4>
+          </div>
+          <div class="factor-content">
+            {{ fundamentalFactors }}
+          </div>
+        </div>
+        
+        <div class="factor-item">
+          <div class="factor-header">
+            <div class="factor-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h4>Market Sentiment</h4>
+          </div>
+          <div class="factor-content">
+            {{ marketSentiment }}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Prediction Points Table -->
+    <div class="prediction-table-card">
+      <h3>Predicted Price Points</h3>
+      
+      <div class="table-container">
+        <table class="prediction-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Predicted Price</th>
+              <th>% Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let point of predictionPoints; let i = index">
+              <td>{{ point.date | date:'mediumDate' }}</td>
+              <td>${{ point.predictedPrice | number:'1.2-2' }}</td>
+              <td [ngClass]="point.predictedPrice > (stockData && stockData.prices && stockData.prices.length > 0 ? stockData.prices[stockData.prices.length-1].close : 0) ? 'positive' : 
+                              point.predictedPrice < (stockData && stockData.prices && stockData.prices.length > 0 ? stockData.prices[stockData.prices.length-1].close : 0) ? 'negative' : 'neutral'">
+                {{ ((point.predictedPrice - (stockData && stockData.prices && stockData.prices.length > 0 ? stockData.prices[stockData.prices.length-1].close : 0)) / 
+                    (stockData && stockData.prices && stockData.prices.length > 0 ? stockData.prices[stockData.prices.length-1].close : 1) * 100) | number:'1.2-2' }}%
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Disclaimer -->
+    <div class="prediction-disclaimer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+      <div class="disclaimer-text">
+        AI predictions are based on historical patterns and technical analysis, but do not guarantee future performance. Past performance is not indicative of future results. Always conduct thorough research before making investment decisions.
+      </div>
+    </div>
+  </ng-container>
+</div>

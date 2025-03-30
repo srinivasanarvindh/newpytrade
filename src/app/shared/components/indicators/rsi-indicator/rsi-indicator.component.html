@@ -1,0 +1,35 @@
+<div class="indicator-card" [ngStyle]="{'height': height}">
+  <div class="indicator-header">
+    <div class="indicator-title">
+      <h3>Relative Strength Index (RSI)</h3>
+      <div *ngIf="!isLoading" [ngClass]="{
+        'value-overbought': rsiStatus === 'overbought',
+        'value-oversold': rsiStatus === 'oversold',
+        'value-neutral': rsiStatus === 'neutral'
+      }" class="current-value">
+        {{ currentRSI }}
+        <span class="indicator-status">
+          {{ rsiStatus === 'overbought' ? 'Overbought' : 
+             rsiStatus === 'oversold' ? 'Oversold' : 'Neutral' }}
+        </span>
+      </div>
+    </div>
+    <div class="indicator-info">
+      <mat-icon matTooltip="RSI measures the speed and magnitude of price movements. Values above 70 indicate overbought conditions, while values below 30 indicate oversold conditions.">
+        info_outline
+      </mat-icon>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="flex justify-center items-center h-full">
+    <mat-spinner diameter="30"></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && rsiData.length > 0" class="indicator-chart">
+    <canvas #rsiCanvas></canvas>
+  </div>
+
+  <div *ngIf="!isLoading && (!rsiData || rsiData.length === 0)" class="flex justify-center items-center h-full">
+    <p class="text-gray-500">No RSI data available</p>
+  </div>
+</div>

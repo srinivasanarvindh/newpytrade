@@ -1,0 +1,159 @@
+<div class="overlay" *ngIf="isLoading">
+  <div class="loader"></div>
+</div>
+
+<div id="toolsContainer">
+  <div class="page-header">
+    <h1>Smart Trade</h1>
+    <div class="page-description">
+      Select markets and companies to analyze with our advanced trading tools.
+    </div>
+  </div>
+
+  <!-- Market Pulse Banner Style Selection Panel -->
+  <section class="market-pulse-banner">
+    <div class="selection-panel">
+      <!-- First row with Country, Market, and Market Division -->
+      <div class="selection-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Country</mat-label>
+          <mat-select [(ngModel)]="selectedCountry">
+            <mat-option *ngFor="let country of countryList" [value]="country">
+              {{ country }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Market</mat-label>
+          <mat-select [(ngModel)]="selectedMarket" [disabled]="!selectedCountry">
+            <mat-option *ngFor="let market of getMarket()" [value]="market">
+              {{ market }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Market Division</mat-label>
+          <mat-select [(ngModel)]="selectedMarketDivision" [disabled]="!selectedMarket">
+            <mat-option *ngFor="let marketdivision of getMarketDivision()" [value]="marketdivision">
+              {{ marketdivision }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <!-- Second row for Companies with select box -->
+      <div class="selection-row companies-row">
+        <!-- Company selection with standard select (not dropdown) -->
+        <div class="companies-container">
+          <div class="companies-header">
+            <label for="companies-select" class="companies-label">
+              Companies
+              <span *ngIf="selectedCompanies.length > 0" class="selection-count">
+                ({{selectedCompanies.length}} selected)
+              </span>
+            </label>
+            
+            <!-- Select/Deselect All Button -->
+            <button 
+              class="select-all-btn" 
+              [disabled]="!selectedMarketDivision || getCompanies().length === 0"
+              (click)="toggleSelectAll()">
+              {{ allSelected ? "Deselect All" : "Select All Companies" }}
+            </button>
+          </div>
+          
+          <!-- Companies Select Box -->
+          <div class="select-box-container" [class.disabled]="!selectedMarketDivision">
+            <div class="select-box-wrapper">
+              <div class="select-box">
+                <div *ngFor="let company of getPaginatedCompanies()" 
+                     class="company-option" 
+                     [class.selected]="selectedCompanies.includes(company.symbol)"
+                     (click)="toggleCompanySelection(company.symbol)">
+                  <input type="checkbox" 
+                         [checked]="selectedCompanies.includes(company.symbol)"
+                         (click)="$event.stopPropagation()">
+                  <span class="company-name">{{ company.company }}</span>
+                  <span class="company-symbol">{{ company.symbol }}</span>
+                </div>
+                
+                <!-- Show empty state message when no companies available -->
+                <div *ngIf="getPaginatedCompanies().length === 0 && selectedMarketDivision" class="empty-message">
+                  No companies available for this market division. Try another division or refresh the data.
+                </div>
+                
+                <!-- Show selection instruction when no market division selected -->
+                <div *ngIf="!selectedMarketDivision" class="empty-message">
+                  Select a Market Division to view companies
+                </div>
+              </div>
+            </div>
+            
+            <!-- Pagination controls - only show when needed (> 10 items) -->
+            <div class="pagination-controls" *ngIf="totalCompanyPages > 1">
+              <button class="pagination-btn" [disabled]="currentCompanyPage === 1" (click)="prevCompanyPage($event)">
+                <i class="fas fa-chevron-left"></i> Prev
+              </button>
+              <span class="pagination-info">
+                Page {{currentCompanyPage}} of {{totalCompanyPages}}
+              </span>
+              <button class="pagination-btn" [disabled]="currentCompanyPage === totalCompanyPages" (click)="nextCompanyPage($event)">
+                Next <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trading Options - Rearranged with AI Trading in same row as Options & Future -->
+  <div class="trading-options-container">
+    <!-- First row: Intraday, Swing Trading, Scalping, Positional Trading -->
+    <div class="trading-options-row">
+      <div *ngFor="let trade of tradeButtons.slice(0, 4); let i = index;" class="btn-dropdown">
+        <!-- Special handling for Swing Trading button -->
+        <button *ngIf="getOriginalIndex(i, 0) === 1" class="custom-button custom-button-border"
+                (click)="navigateToSwingTrading()">
+          <i class="{{ trade.icon }}"></i>
+          <span [style.font-size]="selectedOption ? '0.7vw' : '1vw'">
+            {{ selectedOption ? selectedOption : trade.label }}
+          </span>
+        </button>
+        
+        <!-- Other buttons -->
+        <button *ngIf="getOriginalIndex(i, 0) !== 1" class="custom-button"             
+                [ngClass]="{'custom-button-noborder': trade.isShowDropDown, 'feature-disabled': !trade.routeurl}"
+                [disabled]="selectedCompanies.length === 0 || !trade.routeurl"
+                (click)="calcSignalTrade(trade.routeurl, getOriginalIndex(i, 0))">
+          <i class="{{ trade.icon }}"></i>
+          <span>{{ trade.label }}</span>
+        </button>
+        
+        <button *ngIf="getOriginalIndex(i, 0) === 1" class="caret-btn" (click)="toggleDropdown($event)">
+          <span>▼</span>
+        </button>
+        <div *ngIf="isDropdownOpen && getOriginalIndex(i, 0) === 1" class="dropdown-menu">
+          <button *ngFor="let option of options" (click)="selectOption(option, $event)">
+            {{ option }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second row: Options & Future, AI Trading, Long Term Investment, Short Term Investment -->
+    <div class="trading-options-row">
+      <div *ngFor="let trade of tradeButtons.slice(4, 8); let i = index;" class="btn-dropdown">
+        <button class="custom-button"             
+                [ngClass]="{'custom-button-noborder': trade.isShowDropDown, 'custom-button-border': true, 'feature-disabled': !trade.routeurl}"
+                [disabled]="selectedCompanies.length === 0 || !trade.routeurl"
+                (click)="calcSignalTrade(trade.routeurl, getOriginalIndex(i, 4))">
+          <i class="{{ trade.icon }}"></i>
+          <span>{{ trade.label }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

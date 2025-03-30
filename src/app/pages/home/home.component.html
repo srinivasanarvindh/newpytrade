@@ -1,0 +1,155 @@
+<div class="home-container">
+  <!-- Coming Soon Message if applicable -->
+  <div *ngIf="comingSoonMessage" class="coming-soon-container">
+    <div class="coming-soon-message">
+      <h2>{{ comingSoonMessage }}</h2>
+      <p>We're working hard to bring you this feature. Please check back soon!</p>
+      <a routerLink="/" class="btn-primary">Return to Home</a>
+    </div>
+  </div>
+
+  <!-- Regular home content (hidden if coming soon message is present) -->
+  <ng-container *ngIf="!comingSoonMessage">
+  <!-- Hero Section Removed for cleaner look, focused on search like screener.in -->
+  
+  <!-- Centralized Search Section -->
+  <section class="central-search-section">
+    <div class="central-search-container">
+      <div class="logo-container">
+        <h1 class="screener-logo">Let's Trade! <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="stock-icon"><path d="M3 3v18h18"></path><path d="M8 17l4-8 4 4 4-10"></path></svg></h1>
+        <p class="screener-tagline">Stock analysis and screening tool for investors</p>
+      </div>
+      <div class="central-search-box">
+        <app-stock-search></app-stock-search>
+      </div>
+      <p class="search-hint">Search companies, tickers, or indices (e.g., INFY, RELIANCE, BHARTIARTL)</p>
+      
+      <!-- Trading Features Quick Links -->
+      <div class="quick-features">
+        <div class="quick-feature-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span>Intraday Trading</span>
+        </div>
+        <div class="quick-feature-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <span>Swing Trading</span>
+        </div>
+        <div class="quick-feature-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Technical Analysis</span>
+        </div>
+        <div class="quick-feature-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <span>AI Predictions</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Market Overview -->
+  <section class="market-overview">
+    <div class="section-header">
+      <h2>Market Overview</h2>
+      <a routerLink="/market-overview" class="view-all">View All</a>
+    </div>
+    
+    <!-- Market Sentiment Indicator -->
+    <div class="market-sentiment-banner">
+      <div class="sentiment-indicator" [ngClass]="marketSentiment">
+        <div class="sentiment-icon">
+          <i class="fas" [ngClass]="marketSentiment === 'bullish' ? 'fa-arrow-trend-up' : (marketSentiment === 'bearish' ? 'fa-arrow-trend-down' : 'fa-arrows-left-right')"></i>
+        </div>
+        <div class="sentiment-text">
+          <span class="sentiment-label">Market Sentiment:</span>
+          <span class="sentiment-value">{{marketSentiment === 'bullish' ? 'Bullish' : (marketSentiment === 'bearish' ? 'Bearish' : 'Neutral')}}</span>
+        </div>
+      </div>
+      <div class="market-time">
+        <span class="time-label">Last Updated:</span>
+        <span class="time-value">{{lastUpdated | date:'medium'}}</span>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Top Stocks By Market (Tabular Format) -->
+  <section class="market-data-section">
+    <div class="section-header">
+      <h2>Top Stocks By Market</h2>
+    </div>
+    
+    <!-- New tabular component with tabs -->
+    <app-top-stocks-table 
+      [nseStocks]="topNseStocks"
+      [bseStocks]="topBseStocks"
+      [nasdaqStocks]="topNasdaqStocks"
+      [nyseStocks]="topNyseStocks"
+      [ftseStocks]="topFtseStocks"
+      [daxStocks]="topDaxStocks"
+      [nikkeiStocks]="topNikkeiStocks"
+      [shcompStocks]="topShcompStocks"
+      [isLoadingNse]="isLoadingNseStocks"
+      [isLoadingBse]="isLoadingBseStocks"
+      [isLoadingNasdaq]="isLoadingNasdaqStocks"
+      [isLoadingNyse]="isLoadingNyseStocks"
+      [isLoadingFtse]="isLoadingFtseStocks"
+      [isLoadingDax]="isLoadingDaxStocks"
+      [isLoadingNikkei]="isLoadingNikkeiStocks"
+      [isLoadingShcomp]="isLoadingShcompStocks"
+      [nseError]="nseStocksError"
+      [bseError]="bseStocksError"
+      [nasdaqError]="nasdaqStocksError"
+      [nyseError]="nyseStocksError"
+      [ftseError]="ftseStocksError"
+      [daxError]="daxStocksError"
+      [nikkeiError]="nikkeiStocksError"
+      [shcompError]="shcompStocksError"
+      (reloadNseStocks)="loadTopStocksByMarket()"
+      (reloadBseStocks)="loadTopStocksByMarket()"
+      (reloadNasdaqStocks)="loadTopStocksByMarket()"
+      (reloadNyseStocks)="loadTopStocksByMarket()"
+      (reloadFtseStocks)="loadTopStocksByMarket()"
+      (reloadDaxStocks)="loadTopStocksByMarket()"
+      (reloadNikkeiStocks)="loadTopStocksByMarket()"
+      (reloadShcompStocks)="loadTopStocksByMarket()">
+    </app-top-stocks-table>
+  </section>
+  
+  <!-- Market News -->
+  <section class="market-news">
+    <div class="section-header">
+      <h2>Market News</h2>
+      <a href="#" class="view-all">View All</a>
+    </div>
+    
+    <div *ngIf="isLoadingNews" class="loading-container">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+    
+    <div *ngIf="newsError" class="error-container">
+      {{ newsError }}
+    </div>
+    
+    <div class="news-grid" *ngIf="!(isLoadingNews || newsError)">
+      <div class="news-card" *ngFor="let news of marketNews">
+        <div class="news-date">{{ news.date | date }}</div>
+        <h3 class="news-title">{{ news.title }}</h3>
+        <p class="news-summary">{{ news.summary }}</p>
+        <div class="news-source">Source: {{ news.source }}</div>
+      </div>
+    </div>
+  </section>
+  
+
+  </ng-container>
+</div>

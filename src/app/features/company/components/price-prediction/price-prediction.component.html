@@ -1,0 +1,129 @@
+<div class="price-prediction-container mb-6">
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="p-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold">AI Price Prediction</h2>
+      <p class="text-sm text-gray-600 mt-1">
+        Machine learning-based price forecast for the next 15 days
+      </p>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoading && !predictionData" class="p-6 text-center">
+      <p class="text-gray-500">No prediction data available for this stock</p>
+    </div>
+
+    <div *ngIf="!isLoading && predictionData && predictedPrices.length > 0" class="p-4">
+      <!-- Prediction Summary -->
+      <div class="prediction-summary mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="stat-card">
+            <div class="text-sm text-gray-500">Current Price</div>
+            <div class="text-xl font-bold">{{ latestPrice | currency:'USD':'symbol':'1.2-2' }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-sm text-gray-500">Predicted (15d)</div>
+            <div [ngClass]="{
+              'text-success': shortTermTrend === 'bullish',
+              'text-error': shortTermTrend === 'bearish',
+              'text-gray-700': shortTermTrend === 'neutral'
+            }" class="text-xl font-bold">
+              {{ predictedPrices[predictedPrices.length - 1] | currency:'USD':'symbol':'1.2-2' }}
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="text-sm text-gray-500">Potential Return</div>
+            <div [ngClass]="{
+              'text-success': potentialReturn > 0,
+              'text-error': potentialReturn < 0,
+              'text-gray-700': potentialReturn === 0
+            }" class="text-xl font-bold">
+              {{ potentialReturn > 0 ? '+' : '' }}{{ potentialReturn | number:'1.2-2' }}%
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="text-sm text-gray-500">Confidence</div>
+            <div class="confidence-pill" [ngClass]="{
+              'high-confidence': predictionConfidence === 'high',
+              'moderate-confidence': predictionConfidence === 'moderate',
+              'low-confidence': predictionConfidence === 'low'
+            }">
+              {{ predictionConfidence | titlecase }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prediction Chart -->
+      <div class="prediction-chart-container mb-6">
+        <app-stock-chart
+          [priceData]="priceData"
+          [predictions]="predictedPrices"
+          [predictionDates]="predictionDates"
+          [chartType]="'area'"
+          [title]="'Price Prediction'"
+          [height]="'350px'">
+        </app-stock-chart>
+      </div>
+
+      <!-- Prediction Details -->
+      <div class="prediction-details p-4 bg-gray-50 rounded-lg">
+        <h3 class="font-bold mb-3">Prediction Insights</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="insight-card">
+            <div class="text-sm text-gray-500">Price Range</div>
+            <div class="text-base font-medium">
+              {{ minPredictedPrice | currency:'USD':'symbol':'1.2-2' }} - {{ maxPredictedPrice | currency:'USD':'symbol':'1.2-2' }}
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="text-sm text-gray-500">Average Predicted Price</div>
+            <div class="text-base font-medium">
+              {{ avgPredictedPrice | currency:'USD':'symbol':'1.2-2' }}
+            </div>
+          </div>
+          <div class="insight-card">
+            <div class="text-sm text-gray-500">Trend</div>
+            <div [ngClass]="{
+              'text-success': shortTermTrend === 'bullish',
+              'text-error': shortTermTrend === 'bearish',
+              'text-gray-700': shortTermTrend === 'neutral'
+            }" class="text-base font-medium flex items-center">
+              {{ shortTermTrend | titlecase }}
+              <mat-icon class="ml-1">
+                {{ shortTermTrend === 'bullish' ? 'trending_up' : 
+                   shortTermTrend === 'bearish' ? 'trending_down' : 'trending_flat' }}
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-sm text-gray-700">
+          <p *ngIf="shortTermTrend === 'bullish'" class="mb-2">
+            <strong>Bullish Outlook:</strong> Our AI model predicts an upward trend over the next 15 days with an estimated return of 
+            <span class="text-success font-medium">{{ potentialReturn | number:'1.2-2' }}%</span>.
+            This prediction is based on historical price patterns, technical indicators, and market sentiment analysis.
+          </p>
+          <p *ngIf="shortTermTrend === 'bearish'" class="mb-2">
+            <strong>Bearish Outlook:</strong> Our AI model predicts a downward trend over the next 15 days with an estimated decline of 
+            <span class="text-error font-medium">{{ potentialReturn | number:'1.2-2' }}%</span>.
+            This prediction is based on historical price patterns, technical indicators, and market sentiment analysis.
+          </p>
+          <p *ngIf="shortTermTrend === 'neutral'" class="mb-2">
+            <strong>Neutral Outlook:</strong> Our AI model predicts sideways movement over the next 15 days with minimal price change 
+            ({{ potentialReturn | number:'1.2-2' }}%).
+            This prediction is based on historical price patterns, technical indicators, and market sentiment analysis.
+          </p>
+          
+          <p class="text-xs text-gray-500 mt-4">
+            <strong>Disclaimer:</strong> AI predictions are based on historical patterns and should not be used as the sole basis for investment decisions. 
+            Past performance is not indicative of future results. Always conduct your own research before making investment decisions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

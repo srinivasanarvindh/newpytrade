@@ -1,0 +1,73 @@
+{
+  "/api/swing-trading": {
+    "target": "http://127.0.0.1:5010",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "timeout": 120000,
+    "proxyTimeout": 120000
+  },
+  "/api/indices": {
+    "target": "http://127.0.0.1:5001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "timeout": 120000,
+    "proxyTimeout": 120000
+  },
+  "/indices": {
+    "target": "http://127.0.0.1:5001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "timeout": 120000,
+    "proxyTimeout": 120000
+  },
+  "/api": {
+    "target": "http://127.0.0.1:5001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "timeout": 120000,
+    "proxyTimeout": 120000
+  },
+  "/google_login": {
+    "target": "http://127.0.0.1:5001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "timeout": 120000,
+    "proxyTimeout": 120000
+  },
+  "/ws": {
+    "target": "ws://127.0.0.1:5003",
+    "ws": true,
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/swing-trading": {
+    "target": "http://127.0.0.1:5010",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "timeout": 120000,
+    "proxyTimeout": 120000
+  },
+  "/companies": {
+    "target": "http://127.0.0.1:5001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "timeout": 120000,
+    "proxyTimeout": 120000
+  },
+  "/api/company": {
+    "target": "http://127.0.0.1:5001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "timeout": 120000,
+    "proxyTimeout": 120000
+  }
+}

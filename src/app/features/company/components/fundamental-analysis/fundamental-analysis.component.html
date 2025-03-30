@@ -1,0 +1,143 @@
+<div class="fundamental-analysis-container mb-6">
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="p-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold">Fundamental Analysis</h2>
+      <p class="text-sm text-gray-600 mt-1">
+        Key financial metrics and fundamental indicators
+      </p>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoading && !fundamentalData" class="p-6 text-center">
+      <p class="text-gray-500">No fundamental data available for this stock</p>
+    </div>
+
+    <div *ngIf="!isLoading && fundamentalData" class="p-4">
+      <!-- Company Overview -->
+      <div *ngIf="companyName || sector || industry" class="mb-6 p-4 bg-gray-50 rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div *ngIf="companyName" class="company-info">
+            <div class="text-sm text-gray-500">Company</div>
+            <div class="font-medium">{{ companyName }}</div>
+          </div>
+          <div *ngIf="sector" class="company-info">
+            <div class="text-sm text-gray-500">Sector</div>
+            <div class="font-medium">{{ sector }}</div>
+          </div>
+          <div *ngIf="industry" class="company-info">
+            <div class="text-sm text-gray-500">Industry</div>
+            <div class="font-medium">{{ industry }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fundamental Score -->
+      <div class="score-card mb-6 border border-gray-200 rounded-lg p-4">
+        <div class="flex items-center">
+          <div [ngClass]="{
+            'bg-success': scoreCategory === 'strong',
+            'bg-warning': scoreCategory === 'moderate',
+            'bg-error': scoreCategory === 'weak'
+          }" class="score-circle">
+            {{ overallScore }}
+          </div>
+          <div class="ml-4">
+            <h3 class="font-bold text-lg">
+              {{ scoreCategory === 'strong' ? 'Strong' : 
+                 scoreCategory === 'moderate' ? 'Moderate' : 'Weak' }} 
+              Fundamentals
+            </h3>
+            <p class="text-sm text-gray-600">
+              Based on comprehensive analysis of {{ fundamentalGroups.length }} financial metrics
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Metrics Highlights -->
+      <div class="key-metrics-container mb-6">
+        <h3 class="font-bold mb-3">Key Metrics</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="key-metric-card">
+            <div class="text-sm text-gray-500">EPS (TTM)</div>
+            <div class="metric-value" [ngClass]="{'positive-value': eps && eps > 0, 'negative-value': eps && eps < 0}">
+              {{ eps !== null ? (eps | currency:'USD':'symbol':'1.2-2') : 'N/A' }}
+            </div>
+          </div>
+          <div class="key-metric-card">
+            <div class="text-sm text-gray-500">P/E Ratio</div>
+            <div class="metric-value" [ngClass]="{'positive-value': peRatio && peRatio < 15, 'negative-value': peRatio && peRatio > 25}">
+              {{ peRatio !== null ? (peRatio | number:'1.2-2') : 'N/A' }}
+            </div>
+          </div>
+          <div class="key-metric-card">
+            <div class="text-sm text-gray-500">Revenue Growth</div>
+            <div class="metric-value" [ngClass]="{'positive-value': revenueGrowth && revenueGrowth > 0, 'negative-value': revenueGrowth && revenueGrowth < 0}">
+              {{ revenueGrowth !== null ? (revenueGrowth | percent:'1.2-2') : 'N/A' }}
+            </div>
+          </div>
+          <div class="key-metric-card">
+            <div class="text-sm text-gray-500">Debt-to-Equity</div>
+            <div class="metric-value" [ngClass]="{'positive-value': debtToEquity && debtToEquity < 1, 'negative-value': debtToEquity && debtToEquity > 2}">
+              {{ debtToEquity !== null ? (debtToEquity | number:'1.2-2') : 'N/A' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Fundamental Groups -->
+      <div *ngFor="let group of fundamentalGroups" class="fundamental-group mb-6">
+        <h3 class="font-bold mb-3">{{ group.name }}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div *ngFor="let indicator of group.indicators" class="indicator-card p-4 border border-gray-200 rounded-lg">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="font-medium">{{ indicator.name }}</h4>
+                <div class="flex items-center">
+                  <span [ngClass]="{
+                    'text-success': indicator.status === 'positive',
+                    'text-error': indicator.status === 'negative',
+                    'text-gray-700': indicator.status === 'neutral'
+                  }" class="text-lg font-bold">{{ indicator.value }}</span>
+                  <span *ngIf="indicator.change !== undefined" [ngClass]="{
+                    'text-success': indicator.change > 0,
+                    'text-error': indicator.change < 0,
+                    'text-gray-500': indicator.change === 0
+                  }" class="text-sm ml-2">
+                    {{ indicator.change > 0 ? '+' : '' }}{{ indicator.change | percent:'1.2-2' }}
+                  </span>
+                </div>
+              </div>
+              <mat-icon [matTooltip]="indicator.description" class="text-gray-400 cursor-help">info_outline</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Health Analysis -->
+      <div class="financial-health-analysis mt-6 p-4 bg-gray-50 rounded-lg">
+        <h3 class="font-bold mb-3">Financial Health Analysis</h3>
+        <div class="text-sm text-gray-700">
+          <p *ngIf="scoreCategory === 'strong'">
+            This company demonstrates strong financial health with solid fundamentals across key metrics. 
+            The company shows good profitability, manageable debt levels, and efficient use of capital. 
+            This suggests potential for long-term stability and growth.
+          </p>
+          <p *ngIf="scoreCategory === 'moderate'">
+            This company shows moderate financial health with mixed results across key metrics.
+            While some aspects of the business demonstrate strength, there are areas that could use improvement.
+            Investors should monitor these metrics for signs of improvement or deterioration.
+          </p>
+          <p *ngIf="scoreCategory === 'weak'">
+            This company shows potential financial health concerns with weakness across several key metrics.
+            The company may be facing challenges with profitability, debt management, or capital efficiency.
+            Investors should carefully evaluate these risks before considering an investment.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="search-component">
+  <div class="search-input-wrapper">
+    <input 
+      type="text" 
+      class="search-input" 
+      [formControl]="searchControl"
+      placeholder="Search company or symbol..."
+      (keydown.enter)="onSearchSubmit()"
+      autocomplete="off"
+      (focus)="showResults = true"
+      (blur)="hideResults()"
+    >
+    <button class="search-button" (click)="onSearchSubmit()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div class="search-results" *ngIf="showResults">
+    <div *ngIf="isLoading" class="loading-indicator">
+      <app-loading-spinner [diameter]="20"></app-loading-spinner>
+    </div>
+
+    <ng-container *ngIf="filteredStocks$ | async as stocks">
+      <div class="results-list" *ngIf="stocks.length > 0; else noResults">
+        <div class="result-item" *ngFor="let stock of stocks" (click)="selectStock(stock)" (mousedown)="$event.preventDefault()">
+          <div class="stock-symbol">{{ stock.symbol }}</div>
+          <div class="stock-name">{{ stock.company }}</div>
+          <div class="stock-metadata">
+            <span class="stock-exchange" *ngIf="stock.exchange">{{ stock.exchange }}</span>
+            <span class="stock-currency" *ngIf="stock.currency">{{ stock.currency }}</span>
+          </div>
+        </div>
+        <div class="search-everywhere" *ngIf="searchControl.value" (click)="onSearchSubmit()" (mousedown)="$event.preventDefault()">
+          Search everywhere: {{ searchControl.value }}
+        </div>
+      </div>
+      
+      <ng-template #noResults>
+        <div class="no-results" *ngIf="!isLoading && searchControl.value">
+          No stocks found matching "{{ searchControl.value }}"
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

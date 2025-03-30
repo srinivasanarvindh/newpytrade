@@ -1,0 +1,341 @@
+<div class="technical-analysis-container">
+  <div class="section-header">
+    <h2>Technical Analysis - {{ tradingView | titlecase }}</h2>
+    <div class="trading-view-description">
+      {{ getTradingViewDescription() }}
+    </div>
+  </div>
+  
+  <!-- Chart Section -->
+  <div class="chart-section">
+    <app-chart 
+      [stockData]="stockData" 
+      [chartType]="chartType" 
+      [timeframe]="chartTimeframe"
+      [showVolume]="true"
+      [showIndicators]="true"
+    ></app-chart>
+  </div>
+  
+  <!-- Technical Indicators Summary -->
+  <div class="indicators-summary">
+    <div class="signal-summary" [ngClass]="signalAnalysis.trend">
+      <div class="trend-label">Overall Trend:</div>
+      <div class="trend-value">{{ signalAnalysis.trend | titlecase }}</div>
+      <div class="strength-meter">
+        <div class="strength-bar" [style.width.%]="signalAnalysis.strength"></div>
+      </div>
+      <div class="trend-summary">{{ signalAnalysis.summary }}</div>
+    </div>
+    
+    <div class="indicators-grid">
+      <ng-container *ngIf="technicalIndicators; else noIndicators">
+        <div class="indicator-card" *ngFor="let signal of indicatorSignals">
+          <div class="indicator-header">
+            <div class="indicator-name">{{ signal.indicator }}</div>
+            <div class="indicator-signal" [ngClass]="signal.signal">{{ signal.signal | titlecase }}</div>
+          </div>
+          <div class="indicator-value" *ngIf="signal.value !== null">
+            {{ signal.value | number:'1.2-2' }}
+          </div>
+          <div class="indicator-description">{{ signal.description }}</div>
+        </div>
+      </ng-container>
+      
+      <ng-template #noIndicators>
+        <div class="no-data-message">
+          No technical indicators available for this stock.
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  
+  <!-- Support & Resistance Levels -->
+  <div class="support-resistance-section">
+    <h3>Support & Resistance Levels</h3>
+    
+    <div class="levels-container" *ngIf="supportResistanceLevels.length > 0; else noLevels">
+      <div class="levels-grid">
+        <div class="level-card" *ngFor="let level of supportResistanceLevels" [ngClass]="level.type">
+          <div class="level-type">{{ level.type | titlecase }}</div>
+          <div class="level-value">{{ level.level | number:'1.2-2' }}</div>
+          <div class="level-strength">{{ level.strength | titlecase }} Level</div>
+        </div>
+      </div>
+    </div>
+    
+    <ng-template #noLevels>
+      <div class="no-data-message">
+        No support and resistance levels could be calculated with the current data.
+      </div>
+    </ng-template>
+  </div>
+  
+  <!-- Trading Strategy Recommendations -->
+  <div class="trading-strategy-section">
+    <h3>Trading Strategies for {{ tradingView | titlecase }}</h3>
+    
+    <div class="strategy-container">
+      <ng-container [ngSwitch]="tradingView">
+        <!-- Intraday Strategies -->
+        <div *ngSwitchCase="'intraday'" class="strategy-content">
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Price Action Trading</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Focus on candlestick patterns, support/resistance levels, and volume spikes for quick entries and exits.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Set tight stop-losses (0.5-1% below entry)</li>
+                <li>Target 1:2 risk-reward ratio</li>
+                <li>Exit before market close</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Momentum Strategy</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Trade in the direction of the existing momentum using indicators like RSI and MACD.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Enter on pullbacks in trending markets</li>
+                <li>Use 5-15 minute charts</li>
+                <li>Volume confirmation is essential</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Swing Strategies -->
+        <div *ngSwitchCase="'swing'" class="strategy-content">
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Trend Following</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Identify the direction of the trend using moving averages and enter on pullbacks to support/resistance.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Use daily charts for analysis</li>
+                <li>Look for bullish/bearish engulfing patterns</li>
+                <li>Hold positions for 5-20 days</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Breakout Trading</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Trade breakouts from consolidation patterns with confirmation from volume and momentum indicators.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Wait for confirmation before entry</li>
+                <li>Use the prior support/resistance as stop loss</li>
+                <li>Take partial profits at 1:1 risk-reward</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scalping Strategies -->
+        <div *ngSwitchCase="'scalping'" class="strategy-content">
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Range Scalping</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Trade within established price ranges, buying at support and selling at resistance for quick profits.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Use 1-5 minute charts</li>
+                <li>Target 0.1-0.3% profit per trade</li>
+                <li>Focus on highly liquid stocks</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Breakout Scalping</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Capitalize on short-term price breakouts from tight consolidation patterns or key levels.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Look for volume spikes on breakouts</li>
+                <li>Use ultra-tight stop losses</li>
+                <li>Exit positions within minutes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Positional Strategies -->
+        <div *ngSwitchCase="'positional'" class="strategy-content">
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Trend-Based Position Trading</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Identify strong trends using multiple timeframe analysis and hold positions through minor fluctuations.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Use weekly charts for analysis</li>
+                <li>Combine technical and fundamental analysis</li>
+                <li>Hold positions for weeks to months</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Multi-Timeframe Strategy</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Analyze multiple timeframes to confirm the trend and find optimal entry and exit points.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Use monthly/weekly charts for trend direction</li>
+                <li>Use daily/4-hour charts for entry timing</li>
+                <li>Adjust position size based on conviction</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Long-term Strategies -->
+        <div *ngSwitchCase="'longterm'" class="strategy-content">
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Long-Term Trend Following</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Identify stocks in strong multi-year uptrends with solid fundamentals and hold for extended periods.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Focus on monthly and yearly charts</li>
+                <li>Prioritize fundamental growth metrics</li>
+                <li>Use technical analysis for timing entries</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Value Investing + Technical Timing</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Identify undervalued stocks with strong fundamentals, and use technical analysis to time entries.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Look for stocks trading below intrinsic value</li>
+                <li>Enter on technical support levels</li>
+                <li>Use wide stops based on key levels</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Options Strategies -->
+        <div *ngSwitchCase="'options'" class="strategy-content">
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Directional Options Strategy</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Use call or put options to capitalize on expected price direction with defined risk.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Buy calls in bullish markets, puts in bearish</li>
+                <li>Consider implied volatility before entry</li>
+                <li>Balance expiration time with theta decay</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Option Spreads Strategy</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Use vertical spreads (bull call or bear put) to reduce cost and define risk/reward.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Use bull call spreads in uptrends</li>
+                <li>Use bear put spreads in downtrends</li>
+                <li>Select strike prices based on support/resistance</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- AI-Based Strategies -->
+        <div *ngSwitchCase="'ai'" class="strategy-content">
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Predictive Model Trading</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Use AI-generated price predictions to guide trading decisions, combined with traditional analysis.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Consider prediction confidence levels</li>
+                <li>Use AI for direction, technicals for timing</li>
+                <li>Maintain risk management despite predictions</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <h4>Pattern Recognition Strategy</h4>
+              <div class="strategy-tag" [ngClass]="signalAnalysis.trend">{{ signalAnalysis.trend | titlecase }}</div>
+            </div>
+            <div class="strategy-description">
+              Leverage AI's ability to identify complex patterns and anomalies that traditional analysis might miss.
+            </div>
+            <div class="strategy-tips">
+              <ul>
+                <li>Look for AI-detected pattern completions</li>
+                <li>Confirm with traditional indicators</li>
+                <li>Track AI prediction accuracy over time</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

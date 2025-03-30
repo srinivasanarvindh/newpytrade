@@ -1,0 +1,106 @@
+<div class="company-container">
+  <!-- Breadcrumbs -->
+  <div class="flex items-center text-sm mb-4">
+    <a routerLink="/" class="text-gray-500 hover:text-primary">Home</a>
+    <span class="mx-2 text-gray-400">/</span>
+    <span class="font-medium">{{ symbol }}</span>
+  </div>
+
+  <!-- Company Header -->
+  <div class="bg-white rounded-lg shadow p-6 mb-6">
+    <div *ngIf="isLoadingDetails" class="flex justify-center py-4">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoadingDetails && stockDetails" class="flex flex-col md:flex-row justify-between">
+      <div class="mb-4 md:mb-0">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+          {{ stockDetails.companyName || 'Unknown Company' }}
+          <span class="text-xl text-gray-500 ml-2">({{ symbol }})</span>
+        </h1>
+        <div class="flex items-center mt-2">
+          <span class="text-gray-600">{{ stockDetails.exchange }}</span>
+          <span class="mx-2 text-gray-400">•</span>
+          <span class="text-gray-600">{{ stockDetails.sector }}</span>
+          <span class="mx-2 text-gray-400">•</span>
+          <span class="text-gray-600">{{ stockDetails.industry }}</span>
+        </div>
+      </div>
+      <div class="flex flex-col items-end">
+        <div class="text-3xl font-bold">
+          {{ stockDetails.lastPrice | number:'1.2-2' }}
+          <span class="text-sm text-gray-500 ml-1">{{ stockDetails.currency }}</span>
+        </div>
+        <div [ngClass]="stockDetails.changePercent && stockDetails.changePercent >= 0 ? 'text-success' : 'text-error'" class="flex items-center mt-1">
+          <span class="text-lg font-medium">
+            {{ stockDetails.change | number:'1.2-2' }} ({{ stockDetails.changePercent | number:'1.2-2' }}%)
+          </span>
+          <mat-icon class="ml-1">
+            {{ stockDetails.changePercent && stockDetails.changePercent >= 0 ? 'arrow_upward' : 'arrow_downward' }}
+          </mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoadingDetails && !stockDetails" class="text-center py-4">
+      <p class="text-gray-500">Unable to load stock details for {{ symbol }}</p>
+    </div>
+  </div>
+
+  <!-- Trading Term Selector -->
+  <app-trading-term-selector 
+    [availableTerms]="availableTradingTerms" 
+    [selectedTerm]="selectedTradingTerm"
+    (termChanged)="onTradingTermChange($event)">
+  </app-trading-term-selector>
+
+  <!-- Price Chart -->
+  <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+    <div class="p-4 border-b border-gray-200">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <h2 class="text-xl font-semibold mb-2 sm:mb-0">Price Chart</h2>
+        
+        <div class="timeframe-selector flex flex-wrap gap-2">
+          <button 
+            *ngFor="let tf of timeframes" 
+            (click)="onTimeframeChange(tf.value)" 
+            [ngClass]="{'bg-primary text-white': selectedTimeframe === tf.value, 'bg-gray-100 text-gray-700 hover:bg-gray-200': selectedTimeframe !== tf.value}"
+            class="px-3 py-1 rounded text-sm font-medium transition-colors duration-200">
+            {{ tf.label }}
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-4">
+      <app-stock-chart 
+        [priceData]="priceData" 
+        [isLoading]="isLoadingPriceData"
+        [predictions]="predictionData?.predictions"
+        [predictionDates]="predictionData?.dates"
+        [height]="'400px'">
+      </app-stock-chart>
+    </div>
+  </div>
+
+  <!-- Technical Analysis -->
+  <app-technical-analysis 
+    [symbol]="symbol" 
+    [priceData]="priceData"
+    [isLoading]="isLoadingTechnicals"
+    [tradingTerm]="selectedTradingTerm">
+  </app-technical-analysis>
+
+  <!-- Fundamental Analysis -->
+  <app-fundamental-analysis 
+    [fundamentalData]="fundamentalData"
+    [isLoading]="isLoadingFundamentals">
+  </app-fundamental-analysis>
+
+  <!-- Price Prediction -->
+  <app-price-prediction
+    [predictionData]="predictionData"
+    [priceData]="priceData"
+    [isLoading]="isLoadingPredictions">
+  </app-price-prediction>
+</div>

@@ -1,0 +1,19 @@
+<div class="breadcrumb-container">
+  <div class="breadcrumb-items">
+    <div 
+      *ngFor="let item of displayItems; let i = index; let isLast = last" 
+      class="breadcrumb-item"
+      [class.active]="isLast"
+    >
+      <a 
+        *ngIf="!isLast && item.link" 
+        [routerLink]="item.link" 
+        class="breadcrumb-link"
+      >
+        {{ item.label }}
+      </a>
+      <span *ngIf="isLast || !item.link" class="breadcrumb-text">{{ item.label }}</span>
+      <span *ngIf="!isLast" class="breadcrumb-separator">/</span>
+    </div>
+  </div>
+</div>

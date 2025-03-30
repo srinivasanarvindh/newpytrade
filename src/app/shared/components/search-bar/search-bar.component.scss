@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  margin-bottom: -1.25em;
+}
+
+::ng-deep .mat-option {
+  height: auto !important;
+  line-height: normal !important;
+  padding: 12px 16px !important;
+}

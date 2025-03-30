@@ -1,0 +1,277 @@
+<div class="screener-container">
+  <div class="page-header">
+    <h1>Advanced Stock Screener</h1>
+    <p class="description">Filter stocks based on technical indicators, fundamentals, performance, and AI predictions</p>
+  </div>
+
+  <!-- Filter Panel -->
+  <form [formGroup]="filterForm" (ngSubmit)="search()" class="filter-panel">
+    <div class="filter-section">
+      <h3>Presets <span class="badge" *ngIf="presetFilter">{{ presetFilter }}</span></h3>
+      <div class="preset-buttons">
+        <button type="button" class="preset-btn" [class.active]="presetFilter === 'gainers'" (click)="applyPresetFilter('gainers')">Top Gainers</button>
+        <button type="button" class="preset-btn" [class.active]="presetFilter === 'losers'" (click)="applyPresetFilter('losers')">Top Losers</button>
+        <button type="button" class="preset-btn" [class.active]="presetFilter === 'volume'" (click)="applyPresetFilter('volume')">Most Active</button>
+        <button type="button" class="preset-btn" [class.active]="presetFilter === 'rsi-oversold'" (click)="applyPresetFilter('rsi-oversold')">RSI Oversold</button>
+        <button type="button" class="preset-btn" [class.active]="presetFilter === 'rsi-overbought'" (click)="applyPresetFilter('rsi-overbought')">RSI Overbought</button>
+        <button type="button" class="preset-btn" [class.active]="presetFilter === 'dividend'" (click)="applyPresetFilter('dividend')">High Dividend</button>
+        <button type="button" class="preset-btn" [class.active]="presetFilter === 'value'" (click)="applyPresetFilter('value')">Value Stocks</button>
+        <button type="button" class="preset-btn" [class.active]="presetFilter === 'growth'" (click)="applyPresetFilter('growth')">Growth Stocks</button>
+        <button type="button" class="preset-btn ai-btn" [class.active]="presetFilter === 'ai-prediction'" (click)="applyPresetFilter('ai-prediction')">AI Predicted Growth</button>
+      </div>
+    </div>
+
+    <div class="filter-grid">
+      <!-- Markets & Indices -->
+      <div class="filter-section">
+        <h3>Markets & Indices</h3>
+        <div class="filter-group">
+          <label>Markets</label>
+          <select multiple formControlName="markets" (change)="onMarketChange($event)">
+            <option *ngFor="let region of marketRegions" [value]="region.id">{{ region.name }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Indices</label>
+          <select multiple formControlName="indices">
+            <option *ngFor="let index of marketIndices" [value]="index.id">{{ index.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Sectors & Industries -->
+      <div class="filter-section">
+        <h3>Sectors & Industries</h3>
+        <div class="filter-group">
+          <label>Sectors</label>
+          <select multiple formControlName="sectors" (change)="onSectorChange($event)">
+            <option *ngFor="let sector of sectors" [value]="sector">{{ sector }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Industries</label>
+          <select multiple formControlName="industries">
+            <option *ngFor="let industry of getAvailableIndustries()" [value]="industry">{{ industry }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Technical Indicators -->
+      <div class="filter-section" formGroupName="technical">
+        <h3>Technical Indicators</h3>
+        <div class="filter-group" formGroupName="rsi">
+          <label>RSI (0-100)</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min" min="0" max="100">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max" min="0" max="100">
+          </div>
+        </div>
+        <div class="filter-group" formGroupName="macd">
+          <label>MACD Crossover</label>
+          <select formControlName="crossover">
+            <option [ngValue]="null">Any</option>
+            <option value="bullish">Bullish (MACD above Signal)</option>
+            <option value="bearish">Bearish (MACD below Signal)</option>
+          </select>
+        </div>
+        <div class="filter-group" formGroupName="ema">
+          <label>EMA Crossover</label>
+          <select formControlName="crossover">
+            <option [ngValue]="null">Any</option>
+            <option value="50_200_bullish">Bullish (50 EMA above 200 EMA)</option>
+            <option value="50_200_bearish">Bearish (50 EMA below 200 EMA)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Fundamentals -->
+      <div class="filter-section" formGroupName="fundamental">
+        <h3>Fundamentals</h3>
+        <div class="filter-group" formGroupName="pe_ratio">
+          <label>P/E Ratio</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min" min="0">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max" min="0">
+          </div>
+        </div>
+        <div class="filter-group" formGroupName="market_cap">
+          <label>Market Cap ($ Billion)</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min" min="0">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max" min="0">
+          </div>
+        </div>
+        <div class="filter-group" formGroupName="dividend_yield">
+          <label>Dividend Yield (%)</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min" min="0">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Metrics -->
+      <div class="filter-section" formGroupName="performance">
+        <h3>Performance</h3>
+        <div class="filter-group" formGroupName="price_change_1d">
+          <label>Daily Change (%)</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max">
+          </div>
+        </div>
+        <div class="filter-group" formGroupName="price_change_1w">
+          <label>Weekly Change (%)</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max">
+          </div>
+        </div>
+        <div class="filter-group" formGroupName="price_change_1m">
+          <label>Monthly Change (%)</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max">
+          </div>
+        </div>
+        <div class="filter-group" formGroupName="volume_change_1d">
+          <label>Volume Change (x normal)</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min" min="0">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Predictions -->
+      <div class="filter-section ai-section" formGroupName="prediction">
+        <h3>AI Predictions</h3>
+        <div class="filter-group" formGroupName="predicted_change">
+          <label>Predicted Change (%)</label>
+          <div class="range-inputs">
+            <input type="number" placeholder="Min" formControlName="min">
+            <span>to</span>
+            <input type="number" placeholder="Max" formControlName="max">
+          </div>
+        </div>
+      </div>
+
+      <!-- Sorting Options -->
+      <div class="filter-section">
+        <h3>Sorting</h3>
+        <div class="filter-group">
+          <label>Sort By</label>
+          <select (change)="onSortChange($event)">
+            <option *ngFor="let option of sortOptions" [value]="option.field + '|' + option.direction">{{ option.name }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="filter-actions">
+      <button type="submit" class="primary-btn">Apply Filters</button>
+      <button type="button" class="secondary-btn" (click)="resetFilters()">Reset</button>
+    </div>
+  </form>
+
+  <!-- Results Section -->
+  <div class="results-section">
+    <div class="results-header">
+      <h2>Screening Results</h2>
+      <div class="results-meta">
+        <span>Showing {{ filteredResults.length }} of {{ totalResults }} results</span>
+        <select class="page-size-select">
+          <option value="20">20 per page</option>
+          <option value="50">50 per page</option>
+          <option value="100">100 per page</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <app-loading-spinner></app-loading-spinner>
+      <p>Scanning markets for matching stocks...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-container">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+      <button class="retry-btn" (click)="search()">Retry</button>
+    </div>
+
+    <!-- Results Table -->
+    <div *ngIf="!isLoading && !error && filteredResults.length > 0" class="results-table-container">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Company</th>
+            <th>Price</th>
+            <th>Change</th>
+            <th>Market Cap</th>
+            <th>P/E Ratio</th>
+            <th>RSI</th>
+            <th>EMA Status</th>
+            <th>AI Prediction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of filteredResults">
+            <td class="symbol-cell">
+              <a [routerLink]="['/company', stock.symbol]">{{ stock.symbol }}</a>
+            </td>
+            <td class="company-cell">{{ stock.company }}</td>
+            <td class="price-cell">{{ stock.price | currency }}</td>
+            <td class="change-cell" [class.positive]="(stock.change || 0) >= 0" [class.negative]="(stock.change || 0) < 0">
+              <i class="fas" [class.fa-caret-up]="(stock.change || 0) >= 0" [class.fa-caret-down]="(stock.change || 0) < 0"></i>
+              {{ stock.changePercent || 0 }}%
+            </td>
+            <td class="market-cap-cell">{{ stock.fundamental?.market_cap }}</td>
+            <td class="pe-ratio-cell">{{ stock.fundamental?.pe_ratio }}</td>
+            <td class="rsi-cell" [ngClass]="getRsiClass(stock)">
+              {{ stock.technical?.rsi || 'N/A' }}
+            </td>
+            <td class="ema-cell">
+              {{ hasEmaData(stock) ? getEmaTrend(stock) : 'N/A' }}
+            </td>
+            <td class="prediction-cell">
+              <i class="fas" [ngClass]="getPredictionIconClass(stock)"></i>
+              {{ stock.prediction?.predicted_change !== undefined ? (stock.prediction?.predicted_change + '%') : 'N/A' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- No Results State -->
+    <div *ngIf="!isLoading && !error && filteredResults.length === 0" class="no-results-container">
+      <i class="fas fa-search"></i>
+      <p>No stocks match your criteria</p>
+      <button class="retry-btn" (click)="resetFilters()">Reset Filters</button>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!isLoading && !error && totalResults > pageSize" class="pagination">
+      <button [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+        <i class="fas fa-chevron-left"></i> Prev
+      </button>
+      
+      <span class="page-info">Page {{ currentPage }} of {{ Math.ceil(totalResults / pageSize) }}</span>
+      
+      <button [disabled]="currentPage * pageSize >= totalResults" (click)="changePage(currentPage + 1)">
+        Next <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

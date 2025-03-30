@@ -1,0 +1,514 @@
+<div class="market-overview-container">
+  <div class="page-header">
+    <h1>Market Overview</h1>
+    <div class="page-description">
+      Comprehensive view of global market indices, top movers, and latest market news.
+    </div>
+  </div>
+  
+  <!-- Market Pulse Banner -->
+  <section class="market-pulse-banner">
+    <div class="market-sentiment">
+      <div class="sentiment-indicator" [ngClass]="marketSentiment">
+        <div class="sentiment-icon">
+          <i class="fas" [ngClass]="marketSentiment === 'bullish' ? 'fa-arrow-trend-up' : (marketSentiment === 'bearish' ? 'fa-arrow-trend-down' : 'fa-arrows-left-right')"></i>
+        </div>
+        <div class="sentiment-text">
+          <span class="sentiment-label">Market Sentiment:</span>
+          <span class="sentiment-value">{{marketSentiment === 'bullish' ? 'Bullish' : (marketSentiment === 'bearish' ? 'Bearish' : 'Neutral')}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="market-summary">
+      <div class="market-time">Last updated: {{lastUpdated | date:'medium'}}</div>
+    </div>
+  </section>
+  
+  <!-- Region Selector Tabs -->
+  <div class="region-selector">
+    <div class="region-tabs">
+      <button 
+        class="region-tab" 
+        [class.active]="selectedRegion === 'global'" 
+        (click)="changeRegion('global')"
+      >
+        <i class="fas fa-globe"></i>
+        <span>Global</span>
+      </button>
+      <button 
+        class="region-tab" 
+        [class.active]="selectedRegion === 'india'" 
+        (click)="changeRegion('india')"
+      >
+        <i class="fas fa-flag"></i>
+        <span>India</span>
+      </button>
+      <button 
+        class="region-tab" 
+        [class.active]="selectedRegion === 'us_americas'" 
+        (click)="changeRegion('us_americas')"
+      >
+        <i class="fas fa-globe-americas"></i>
+        <span>US & Americas</span>
+      </button>
+      <button 
+        class="region-tab" 
+        [class.active]="selectedRegion === 'europe'" 
+        (click)="changeRegion('europe')"
+      >
+        <i class="fas fa-euro-sign"></i>
+        <span>Europe</span>
+      </button>
+      <button 
+        class="region-tab" 
+        [class.active]="selectedRegion === 'asia_pacific'" 
+        (click)="changeRegion('asia_pacific')"
+      >
+        <i class="fas fa-yen-sign"></i>
+        <span>Asia Pacific</span>
+      </button>
+      <button 
+        class="region-tab" 
+        [class.active]="selectedRegion === 'middle_east'" 
+        (click)="changeRegion('middle_east')"
+      >
+        <i class="fas fa-mosque"></i>
+        <span>Middle East</span>
+      </button>
+      <button 
+        class="region-tab" 
+        [class.active]="selectedRegion === 'australia'" 
+        (click)="changeRegion('australia')"
+      >
+        <i class="fas fa-globe-oceania"></i>
+        <span>Australia/NZ</span>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Market Indices -->
+  <section class="section-market-indices">
+    <div class="section-header">
+      <h2>Market Indices</h2>
+      <a routerLink="/indices" class="view-all">
+        <span>View All</span>
+        <i class="fas fa-chevron-right"></i>
+      </a>
+    </div>
+    
+    <div class="indices-container">
+      <div *ngIf="isLoadingIndices" class="loading-container">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
+      
+      <div *ngIf="indicesError" class="error-container">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>{{ indicesError }}</span>
+        <button class="retry-btn" (click)="loadIndices()">Retry</button>
+      </div>
+      
+      <ng-container *ngIf="!(isLoadingIndices || indicesError)">
+        <!-- Group indices by region -->
+        <ng-container *ngFor="let regionGroup of indicesByRegion[selectedRegion] | keyvalue">
+          <div class="region-group">
+            <div class="region-header">
+              <h3 class="region-title">{{ regionGroup.key }}</h3>
+              <div class="region-actions">
+                <button class="action-btn" title="Refresh Data">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="action-btn" title="Add to Watchlist">
+                  <i class="fas fa-star"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="indices-grid">
+              <ng-container *ngFor="let index of indices$ | async">
+                <div *ngIf="regionGroup.value.includes(index.name)" class="index-card">
+                  <div class="index-header">
+                    <div class="index-name" [title]="index.name">{{ index.name }}</div>
+                    <button class="index-action" title="Add to Watchlist">
+                      <i class="far fa-star"></i>
+                    </button>
+                  </div>
+                  <div class="index-value">{{ index.value | number:'1.2-2' }}</div>
+                  <div class="index-change" [ngClass]="index.change >= 0 ? 'positive' : 'negative'">
+                    <i class="fas" [ngClass]="index.change >= 0 ? 'fa-caret-up' : 'fa-caret-down'"></i>
+                    {{ index.change | number:'1.2-2' }} ({{ index.changePercent | number:'1.2-2' }}%)
+                  </div>
+                  <div class="index-details">
+                    <a [routerLink]="['/indices', index.name]" class="view-details">View Details</a>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </section>
+  
+  <!-- Market Snapshot -->
+  <section class="section-market-snapshot">
+    <div class="snapshot-header">
+      <h2>Market Movers</h2>
+      <div class="snapshot-tabs">
+        <button class="snapshot-tab active">Daily</button>
+        <button class="snapshot-tab">Weekly</button>
+        <button class="snapshot-tab">Monthly</button>
+      </div>
+    </div>
+    
+    <div class="snapshot-grid">
+      <!-- Top Gainers -->
+      <div class="snapshot-card">
+        <div class="card-header">
+          <h3><i class="fas fa-arrow-up"></i> Top Gainers</h3>
+          <div class="card-actions">
+            <button class="card-action-btn" title="Refresh Data">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="isLoadingGainers" class="loading-container">
+          <app-loading-spinner></app-loading-spinner>
+        </div>
+        
+        <div *ngIf="gainersError" class="error-container">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>{{ gainersError }}</span>
+          <button class="retry-btn" (click)="loadTopGainers()">Retry</button>
+        </div>
+        
+        <ng-container *ngIf="!(isLoadingGainers || gainersError)">
+          <div class="stock-list">
+            <div *ngFor="let stock of topGainers; trackBy: trackBySymbol" class="stock-item">
+              <a [routerLink]="['/company', stock.symbol]" class="stock-link">
+                <div class="stock-info">
+                  <div class="stock-symbol">{{ stock.symbol }}</div>
+                  <div class="stock-name">{{ stock.company }}</div>
+                </div>
+                <div class="stock-change positive">
+                  <i class="fas fa-caret-up"></i>
+                  <span>{{stock.changePercent ? (stock.changePercent | number:'1.2-2') : '+4.25'}}%</span>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a routerLink="/screener" [queryParams]="{filter: 'gainers'}" class="view-more">View more gainers</a>
+          </div>
+        </ng-container>
+      </div>
+      
+      <!-- Top Losers -->
+      <div class="snapshot-card">
+        <div class="card-header">
+          <h3><i class="fas fa-arrow-down"></i> Top Losers</h3>
+          <div class="card-actions">
+            <button class="card-action-btn" title="Refresh Data">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="isLoadingLosers" class="loading-container">
+          <app-loading-spinner></app-loading-spinner>
+        </div>
+        
+        <div *ngIf="losersError" class="error-container">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>{{ losersError }}</span>
+          <button class="retry-btn" (click)="loadTopLosers()">Retry</button>
+        </div>
+        
+        <ng-container *ngIf="!(isLoadingLosers || losersError)">
+          <div class="stock-list">
+            <div *ngFor="let stock of topLosers; trackBy: trackBySymbol" class="stock-item">
+              <a [routerLink]="['/company', stock.symbol]" class="stock-link">
+                <div class="stock-info">
+                  <div class="stock-symbol">{{ stock.symbol }}</div>
+                  <div class="stock-name">{{ stock.company }}</div>
+                </div>
+                <div class="stock-change negative">
+                  <i class="fas fa-caret-down"></i>
+                  <span>{{stock.changePercent ? (stock.changePercent | number:'1.2-2') : '-3.18'}}%</span>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a routerLink="/screener" [queryParams]="{filter: 'losers'}" class="view-more">View more losers</a>
+          </div>
+        </ng-container>
+      </div>
+      
+      <!-- Most Active -->
+      <div class="snapshot-card">
+        <div class="card-header">
+          <h3><i class="fas fa-fire"></i> Most Active</h3>
+          <div class="card-actions">
+            <button class="card-action-btn" title="Refresh Data">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="stock-list">
+          <div *ngFor="let i of [1,2,3,4,5]" class="stock-item">
+            <a [routerLink]="['/company', 'AAPL']" class="stock-link">
+              <div class="stock-info">
+                <div class="stock-symbol">AAPL</div>
+                <div class="stock-name">Apple Inc.</div>
+              </div>
+              <div class="stock-volume">
+                <span>324.5M</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a routerLink="/screener" [queryParams]="{filter: 'volume'}" class="view-more">View more active stocks</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Market Stats Section -->
+  <section class="section-market-stats">
+    <div class="section-header">
+      <h2>Market Statistics</h2>
+      <div class="section-actions">
+        <button class="action-btn active" title="Refresh">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stats-card">
+        <h3><i class="fas fa-chart-pie"></i> Sector Performance</h3>
+        <div class="stats-content">
+          <div class="sector-item">
+            <div class="sector-name">Technology</div>
+            <div class="sector-bar">
+              <div class="sector-progress positive" style="width: 85%"></div>
+            </div>
+            <div class="sector-value positive">
+              <i class="fas fa-caret-up"></i>
+              <span>+2.45%</span>
+            </div>
+          </div>
+          <div class="sector-item">
+            <div class="sector-name">Healthcare</div>
+            <div class="sector-bar">
+              <div class="sector-progress positive" style="width: 65%"></div>
+            </div>
+            <div class="sector-value positive">
+              <i class="fas fa-caret-up"></i>
+              <span>+1.28%</span>
+            </div>
+          </div>
+          <div class="sector-item">
+            <div class="sector-name">Financials</div>
+            <div class="sector-bar">
+              <div class="sector-progress positive" style="width: 40%"></div>
+            </div>
+            <div class="sector-value positive">
+              <i class="fas fa-caret-up"></i>
+              <span>+0.75%</span>
+            </div>
+          </div>
+          <div class="sector-item">
+            <div class="sector-name">Utilities</div>
+            <div class="sector-bar">
+              <div class="sector-progress negative" style="width: 25%"></div>
+            </div>
+            <div class="sector-value negative">
+              <i class="fas fa-caret-down"></i>
+              <span>-0.35%</span>
+            </div>
+          </div>
+          <div class="sector-item">
+            <div class="sector-name">Energy</div>
+            <div class="sector-bar">
+              <div class="sector-progress negative" style="width: 55%"></div>
+            </div>
+            <div class="sector-value negative">
+              <i class="fas fa-caret-down"></i>
+              <span>-1.20%</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a routerLink="/sectors" class="view-more">View sector analysis</a>
+        </div>
+      </div>
+      
+      <div class="stats-card">
+        <h3><i class="fas fa-exchange-alt"></i> Market Breadth</h3>
+        <div class="stats-content">
+          <div class="breadth-grid">
+            <div class="breadth-item">
+              <div class="breadth-label">Advancing</div>
+              <div class="breadth-value positive">1,256</div>
+            </div>
+            <div class="breadth-item">
+              <div class="breadth-label">Declining</div>
+              <div class="breadth-value negative">876</div>
+            </div>
+            <div class="breadth-item">
+              <div class="breadth-label">Unchanged</div>
+              <div class="breadth-value">134</div>
+            </div>
+            <div class="breadth-item">
+              <div class="breadth-label">Adv/Dec Ratio</div>
+              <div class="breadth-value positive">1.43</div>
+            </div>
+            <div class="breadth-item">
+              <div class="breadth-label">New Highs</div>
+              <div class="breadth-value positive">125</div>
+            </div>
+            <div class="breadth-item">
+              <div class="breadth-label">New Lows</div>
+              <div class="breadth-value negative">56</div>
+            </div>
+          </div>
+        </div>
+        <div class="breadth-chart">
+          <div class="breadth-ratio">
+            <div class="ratio-advancing" style="width: 55%"></div>
+            <div class="ratio-declining" style="width: 38%"></div>
+            <div class="ratio-unchanged" style="width: 7%"></div>
+          </div>
+          <div class="breadth-legend">
+            <div class="legend-item">
+              <div class="legend-color advancing"></div>
+              <div class="legend-label">Advancing</div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color declining"></div>
+              <div class="legend-label">Declining</div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color unchanged"></div>
+              <div class="legend-label">Unchanged</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Market News -->
+  <section class="section-market-news">
+    <div class="section-header">
+      <h2>Market News</h2>
+      <div class="news-filters">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Global</button>
+        <button class="filter-btn">Local</button>
+      </div>
+    </div>
+    
+    <div *ngIf="isLoadingNews" class="loading-container">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+    
+    <div *ngIf="newsError" class="error-container">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>{{ newsError }}</span>
+      <button class="retry-btn" (click)="loadMarketNews()">Retry</button>
+    </div>
+    
+    <ng-container *ngIf="!(isLoadingNews || newsError)">
+      <div class="news-grid">
+        <div *ngFor="let news of marketNews; trackBy: trackByTitle" class="news-card">
+          <div class="news-meta">
+            <span class="news-date">{{ news.date | date }}</span>
+            <span class="news-source">{{ news.source }}</span>
+          </div>
+          <h4 class="news-title">{{ news.title }}</h4>
+          <p class="news-summary">{{ news.summary }}</p>
+          <div class="news-footer">
+            <a [href]="news.url" target="_blank" class="news-link">Read more</a>
+          </div>
+        </div>
+      </div>
+      <div class="section-footer">
+        <a routerLink="/news" class="view-all-btn">View all market news</a>
+      </div>
+    </ng-container>
+  </section>
+  
+  <!-- Market Overview Chart -->
+  <section class="section-market-chart">
+    <div class="section-header">
+      <h2>Market Trends</h2>
+      <div class="index-selector">
+        <select class="index-select">
+          <option>S&P 500 (SPX)</option>
+          <option>Dow Jones (DJI)</option>
+          <option>NASDAQ (IXIC)</option>
+          <option>NIFTY 50</option>
+          <option>SENSEX</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">S&P 500 (SPX)</div>
+        <div class="chart-timeframes">
+          <button class="timeframe-btn active">1D</button>
+          <button class="timeframe-btn">1W</button>
+          <button class="timeframe-btn">1M</button>
+          <button class="timeframe-btn">3M</button>
+          <button class="timeframe-btn">6M</button>
+          <button class="timeframe-btn">1Y</button>
+          <button class="timeframe-btn">5Y</button>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <!-- Chart placeholder with visualization -->
+        <div class="chart-placeholder">
+          <div class="chart-message">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="message-icon">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+              <path d="M2 20h20"></path>
+            </svg>
+            <h4>Market Visualization</h4>
+            <p>Interactive charting tools are being integrated with market data providers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Portfolio Summary Section -->
+  <section class="section-portfolio">
+    <div class="section-header">
+      <h2>Your Trading Journey</h2>
+      <a routerLink="/portfolio" class="view-all">
+        <span>View Portfolio</span>
+        <i class="fas fa-chevron-right"></i>
+      </a>
+    </div>
+    
+    <div class="portfolio-card">
+      <div class="empty-portfolio">
+        <div class="empty-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Track your trading journey</h3>
+        <p>Add stocks to your portfolio to track performance and get personalized insights.</p>
+        <button class="cta-button">Create Portfolio</button>
+      </div>
+    </div>
+  </section>
+</div>

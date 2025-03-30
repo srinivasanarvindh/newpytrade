@@ -1,0 +1,52 @@
+/* Font size reductions */
+h1 {
+  font-size: 3vw !important;
+}
+
+h2 {
+  font-size: 2.2vw !important;
+}
+
+h3 {
+  font-size: 1.8vw !important;
+}
+
+h4 {
+  font-size: 1.4vw !important;
+}
+
+p, span, div, button {
+  font-size: 1vw !important;
+}
+
+/* Selection Panel */
+.selection-panel {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 1rem !important;
+}
+
+/* Back button */
+.icon-btn {
+  font-size: 1.5vw !important;
+}
+
+/* Swing trading buttons */
+.swing-btns {
+  font-size: 1vw !important;
+  height: 3vw !important;
+  width: 14vw !important;
+}
+
+/* Trading tools page title */
+.title-container {
+  font-size: 1.8vw !important;
+}
+
+/* Fix trading tools background to match swing trading analysis */
+.trading-tools-panel {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 1rem !important;
+  padding: 2vw !important;
+}

@@ -1,0 +1,248 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+  padding: 2rem;
+  background-color: var(--color-background);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-card-bg);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+  }
+}
+
+.login-form {
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--color-input-bg);
+    color: var(--color-text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    
+    &:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(29, 144, 255, 0.2);
+      outline: none;
+    }
+    
+    &.is-invalid {
+      border-color: var(--color-danger);
+    }
+  }
+  
+  .error-message {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-danger);
+  }
+  
+  .alert-danger {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.25);
+    border-radius: 4px;
+    color: var(--color-danger);
+    font-size: 0.875rem;
+  }
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: var(--color-primary-dark);
+  }
+  
+  &:disabled {
+    background-color: var(--color-primary-light);
+    cursor: not-allowed;
+  }
+}
+
+.social-login {
+  margin-top: 2rem;
+  
+  .divider-text {
+    text-align: center;
+    position: relative;
+    margin: 1.5rem 0;
+    color: var(--color-text-secondary);
+    
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: calc(50% - 60px);
+      height: 1px;
+      background-color: var(--color-border);
+    }
+    
+    &::before {
+      left: 0;
+    }
+    
+    &::after {
+      right: 0;
+    }
+    
+    span {
+      background-color: var(--color-card-bg);
+      padding: 0 1rem;
+      position: relative;
+      z-index: 1;
+    }
+  }
+  
+  .social-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    
+    .social-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-width: 100px;
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      background-color: white;
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+      
+      svg {
+        margin-right: 0.5rem;
+      }
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      
+      &.google-button {
+        color: #4285F4;
+        border-color: #4285F4;
+        
+        &:hover {
+          background-color: rgba(66, 133, 244, 0.05);
+        }
+      }
+      
+      &.facebook-button {
+        color: #1877F2;
+        border-color: #1877F2;
+        
+        &:hover {
+          background-color: rgba(24, 119, 242, 0.05);
+        }
+      }
+      
+      &.twitter-button {
+        color: #1DA1F2;
+        border-color: #1DA1F2;
+        
+        &:hover {
+          background-color: rgba(29, 161, 242, 0.05);
+        }
+      }
+      
+      &.github-button {
+        color: #24292e;
+        border-color: #24292e;
+        
+        &:hover {
+          background-color: rgba(36, 41, 46, 0.05);
+        }
+      }
+    }
+  }
+}
+
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  
+  p {
+    margin-bottom: 0.5rem;
+    color: var(--color-text-secondary);
+  }
+  
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  .forgot-password {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+  
+  .login-header h2 {
+    font-size: 1.5rem;
+  }
+}

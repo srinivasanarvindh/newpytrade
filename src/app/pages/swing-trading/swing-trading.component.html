@@ -1,0 +1,416 @@
+<div class="intraday-container">
+  <img class="intradayBg" src="assets/SwingBG.jpg" alt="Background Image">
+
+  <div class="topSection">
+    <div class="title-container">Swing Trading Prediction</div>
+  </div>
+
+  <div class="swinglist-container">
+    <button class="swing-btns" 
+            [class.active-btn]="receivedSwingTrading === 'Short-Term' || (receivedSwingTrading && receivedSwingTrading.toLowerCase().includes('short'))"
+            [disabled]="isLoading"
+            (click)="selectTimeframe('Short-Term')">
+      Short-Term
+    </button>
+    <button class="swing-btns"
+            [class.active-btn]="receivedSwingTrading === 'Medium-Term' || (receivedSwingTrading && receivedSwingTrading.toLowerCase().includes('medium'))"
+            [disabled]="isLoading"
+            (click)="selectTimeframe('Medium-Term')">
+      Medium-Term
+    </button>
+    <button class="swing-btns"
+            [class.active-btn]="receivedSwingTrading === 'Long-Term' || (receivedSwingTrading && receivedSwingTrading.toLowerCase().includes('long'))"
+            [disabled]="isLoading"
+            (click)="selectTimeframe('Long-Term')">
+      Long-Term
+    </button>
+  </div>
+
+  <!-- Add note about live data - enhanced message -->
+  <div class="live-data-note" *ngIf="!isLoading && !isError">
+    <span class="material-icons">info</span>
+    <p>This tool connects to <strong>real-time market sources</strong> for analysis. For best performance, select 5 or fewer stocks at a time.</p>
+  </div>
+
+  <!-- Loading spinner or error message -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner></mat-spinner>
+    <p>{{ loadingMessage || 'Loading...' }}</p>
+    <p class="loading-timer" *ngIf="loadingTime > 0">
+      <span *ngIf="estimatedTime > 0 && estimatedTime - loadingTime > 0">
+        Estimated time remaining: <strong>{{estimatedTime - loadingTime}}</strong> seconds
+      </span>
+      <span *ngIf="estimatedTime > 0 && estimatedTime - loadingTime <= 0">
+        Almost done... Retrieving and analyzing live data
+      </span>
+    </p>
+    <p class="loading-hint" *ngIf="loadingTime > 30">
+      Live data retrieval and analysis may take longer for multiple stocks. Please be patient.
+    </p>
+  </div>
+
+  <div *ngIf="isError && !isLoading" class="error-message">
+    <div class="error-icon">
+      <span class="material-icons">error_outline</span>
+    </div>
+    <div class="error-content">
+      <h3>Error Loading Data</h3>
+      <p>{{ errorMessage }}</p>
+      <button (click)="loadSwingTradingData()" class="retry-button">
+        <span class="material-icons">refresh</span> Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- Main content container -->
+  <div class="predictContainer" *ngIf="!isLoading && !isError && getSignalModel">
+    <div class="analysis-panel">
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+        <mat-tab label="Technical Analysis">
+          <div class="analysis-box">
+            <h3>Technical Indicator Analysis</h3>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticker</th>
+                  <th>Score (80%)</th>
+                  <th>RSI</th>
+                  <th>MACD</th>
+                  <th>ATR</th>
+                  <th>EMA</th>
+                  <th>Fibo</th>
+                  <th>MS</th>
+                  <th>BB</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let model of paginatedData; let i = index">
+                  <td class="ticker-sym">
+                    <span [style.cursor]="'pointer'" (click)="showResult(i)" [title]="'View details for ' + model.result.ticker">
+                      {{model.result.ticker === 'all' ? (model.symbol || 'Unknown') : model.result.ticker}}
+                    </span>
+                    <button class="navigate-btn" (click)="navigateToCompany(model.result.ticker, true)" 
+                            title="Go to company page (opens in new window)" 
+                            *ngIf="model.result.ticker !== 'all'">
+                      <span class="material-icons">open_in_new</span>
+                    </button>
+                  </td>
+                  <td>{{model.result.overall_ta_score}}%</td>
+                  <td>
+                    <div class="status-circle"
+                         (click)="openPopup(model.result.RSI)"
+                         [ngClass]="{
+                           'yellow': model.result.RSI.Final_Trade_Signal == 'Neutral',
+                           'red': model.result.RSI.Final_Trade_Signal == 'DBuy',
+                           'green': model.result.RSI.Final_Trade_Signal == 'Buy'
+                         }">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-circle"
+                         (click)="openPopup(model.result.MACD)"
+                         [ngClass]="{
+                           'yellow': model.result.MACD.Final_Trade_Signal == 'Neutral',
+                           'red': model.result.MACD.Final_Trade_Signal == 'DBuy',
+                           'green': model.result.MACD.Final_Trade_Signal == 'Buy'
+                         }">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-circle"
+                         (click)="openPopup(model.result.ATR)"
+                         [ngClass]="{
+                           'yellow': model.result.ATR.Final_Trade_Signal == 'Neutral',
+                           'red': model.result.ATR.Final_Trade_Signal == 'DBuy',
+                           'green': model.result.ATR.Final_Trade_Signal == 'Buy'
+                         }">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-circle"
+                         (click)="openPopup(model.result.EMA)"
+                         [ngClass]="{
+                           'yellow': model.result.EMA.Final_Trade_Signal == 'Neutral',
+                           'red': model.result.EMA.Final_Trade_Signal == 'DBuy',
+                           'green': model.result.EMA.Final_Trade_Signal == 'Buy'
+                         }">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-circle"
+                         (click)="openPopup(model.result.Fibonacci)"
+                         [ngClass]="{
+                           'yellow': model.result.Fibonacci.Final_Trade_Signal == 'Neutral',
+                           'red': model.result.Fibonacci.Final_Trade_Signal == 'DBuy',
+                           'green': model.result.Fibonacci.Final_Trade_Signal == 'Buy'
+                         }">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-circle"
+                         (click)="openPopup(model.result.MS)"
+                         [ngClass]="{
+                           'yellow': model.result.MS.Final_Trade_Signal == 'Neutral',
+                           'red': model.result.MS.Final_Trade_Signal == 'DBuy',
+                           'green': model.result.MS.Final_Trade_Signal == 'Buy'
+                         }">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-circle"
+                         (click)="openPopup(model.result.BB)"
+                         [ngClass]="{
+                           'yellow': model.result.BB.Final_Trade_Signal == 'Neutral',
+                           'red': model.result.BB.Final_Trade_Signal == 'DBuy',
+                           'green': model.result.BB.Final_Trade_Signal == 'Buy'
+                         }">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Technical Indicators Explanation -->
+            <div class="indicators-explanation">
+              <h4>Technical Indicators Explained:</h4>
+              <ul>
+                <li><strong>RSI (Relative Strength Index):</strong> Measures the magnitude of recent price changes to evaluate overbought or oversold conditions.</li>
+                <li><strong>MACD (Moving Average Convergence Divergence):</strong> Shows the relationship between two moving averages of a security's price.</li>
+                <li><strong>ATR (Average True Range):</strong> Measures market volatility by calculating the average range between high and low prices.</li>
+                <li><strong>EMA (Exponential Moving Average):</strong> Gives more weight to recent prices, making it more responsive to new information.</li>
+                <li><strong>Fibo (Fibonacci Retracement):</strong> Identifies potential support and resistance levels based on Fibonacci ratios.</li>
+                <li><strong>MS (Moving Average Support):</strong> Analyzes price support based on various moving averages.</li>
+                <li><strong>BB (Bollinger Bands):</strong> Shows price volatility and potential reversal points using standard deviations.</li>
+              </ul>
+              <h4>Color Indicators:</h4>
+              <div class="color-indicators">
+                <div><span class="color-box green"></span> <strong>Green:</strong> Strong Buy Signal</div>
+                <div><span class="color-box yellow"></span> <strong>Yellow:</strong> Neutral/Hold Signal</div>
+                <div><span class="color-box red"></span> <strong>Red:</strong> Sell Signal</div>
+              </div>
+            </div>
+
+            <!-- Pagination removed - All data is now shown at once -->
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Fundamental Analysis">
+          <div class="analysis-box">
+            <h3>Fundamental Analysis</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticker</th>
+                  <th>Score (15%)</th>
+                  <th>Earnings Growth</th>
+                  <th>Debt-to-Equity</th>
+                  <th>P/E Ratio</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let model of paginatedData;let i = index">
+                  <td class="ticker-sym">
+                    <span [style.cursor]="'pointer'" (click)="showResult(i)" [title]="'View details for ' + model.result.ticker">
+                      {{model.result.ticker === 'all' ? (model.symbol || 'Unknown') : model.result.ticker}}
+                    </span>
+                    <button class="navigate-btn" (click)="navigateToCompany(model.result.ticker, true)" 
+                            title="Go to company page (opens in new window)" 
+                            *ngIf="model.result.ticker !== 'all'">
+                      <span class="material-icons">open_in_new</span>
+                    </button>
+                  </td>
+                  <td>{{model.result.fundamental_analysis.overall_fa_score}}%</td>
+                  <td>
+                    <div class="status-circle"
+                         [ngClass]="{
+                           'red': model.result.fundamental_analysis.earnings_growth_status == 'bad',
+                           'green': model.result.fundamental_analysis.earnings_growth_status == 'good',
+                           'yellow': model.result.fundamental_analysis.earnings_growth_status == 'none'
+                         }">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-circle"
+                         [ngClass]="{
+                           'red': model.result.fundamental_analysis.debt_to_equity_status == 'bad',
+                           'green': model.result.fundamental_analysis.debt_to_equity_status == 'good',
+                           'yellow': model.result.fundamental_analysis.debt_to_equity_status == 'none'
+                         }">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-circle"
+                         [ngClass]="{
+                           'red': model.result.fundamental_analysis.pe_ratio_status == 'bad',
+                           'green': model.result.fundamental_analysis.pe_ratio_status == 'good',
+                           'yellow': model.result.fundamental_analysis.pe_ratio_status == 'none'
+                         }">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <!-- Fundamental Indicators Explanation -->
+            <div class="indicators-explanation">
+              <h4>Fundamental Indicators Explained:</h4>
+              <ul>
+                <li><strong>Earnings Growth:</strong> Percentage increase in company earnings over time, indicating profitability trends.</li>
+                <li><strong>Debt-to-Equity:</strong> Ratio measuring financial leverage; lower ratios generally indicate stronger financial health.</li>
+                <li><strong>P/E Ratio:</strong> Price-to-Earnings ratio comparing current share price to earnings per share; helps assess valuation.</li>
+              </ul>
+              <h4>Color Indicators:</h4>
+              <div class="color-indicators">
+                <div><span class="color-box green"></span> <strong>Green:</strong> Favorable Metric</div>
+                <div><span class="color-box yellow"></span> <strong>Yellow:</strong> Neutral/Average Metric</div>
+                <div><span class="color-box red"></span> <strong>Red:</strong> Unfavorable Metric</div>
+              </div>
+            </div>
+            
+            <!-- Pagination removed - All data is now shown at once -->
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <div class="results-panel" *ngIf="isShowResult">
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
+        <mat-tab label="Overall Result">
+          <div class="analysis-box">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Company Name</td>
+                  <td>
+                    {{getSignalModel[companySelect].result.company_name}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Company Ticker</td>
+                  <td>
+                    <a 
+                      (click)="navigateToCompany(getSignalModel[companySelect].result.ticker)" 
+                      style="cursor: pointer; color: #1976d2; text-decoration: underline;"
+                    >
+                      {{getSignalModel[companySelect].result.ticker}}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Overall Score</td>
+                  <td>
+                    {{getSignalModel[companySelect].result.combined_overall_score}}%
+                  </td>
+                </tr>
+                <tr>
+                  <td>Overall Signal</td>
+                  <td>                   
+                    <div class="status-circle"
+                      [ngClass]="{
+                        'yellow': getSignalModel[companySelect].result.combined_overall_signal == 'Neutral',
+                        'red': getSignalModel[companySelect].result.combined_overall_signal == 'DBuy',
+                        'green': getSignalModel[companySelect].result.combined_overall_signal == 'Buy'
+                      }">
+                    </div>
+                    <span style="margin-left: 10px;">
+                      {{getSignalModel[companySelect].result.combined_overall_signal}}
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Stop Loss</td>
+                  <td>
+                    {{getSignalModel[companySelect].result.stoploss}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Target Price</td>
+                  <td>
+                    {{getSignalModel[companySelect].result.takeprofit}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-tab>
+        <mat-tab label="Predicted Chart">
+          <ng-template matTabContent>
+            <div class="analysis-box">
+              <!-- Chart container with visible canvas at all times -->
+              <div id="chart-container" style="position: relative; height: 400px; width: 100%;">
+                <!-- Only render the canvas when this tab is active -->
+                <canvas id="prediction-chart-0"></canvas>
+                
+                <!-- Overlay loading indicator on top of the canvas -->
+                <div *ngIf="chartLoading" class="chart-loading-overlay">
+                  <mat-spinner diameter="40"></mat-spinner>
+                  <p>Generating price prediction chart...</p>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="News">
+          <div class="analysis-box">
+            <div *ngIf="showNews && showNews.length > 0">
+              <div class="news-container" *ngFor="let news of showNews;let i = index">
+                <!-- Handle different API response formats -->
+                <h4 *ngIf="news.title">{{news.title}}</h4>
+                <h4 *ngIf="news.content?.title">{{news.content.title}}</h4>
+                
+                <p *ngIf="news.summary" style="font-size: 14px; color: #555;">{{news.summary}}</p>
+                <p *ngIf="news.content?.summary" style="font-size: 14px; color: #555;">{{news.content.summary}}</p>
+                
+                <p *ngIf="news.date">Published: {{news.date}}</p>
+                <p *ngIf="news.publishedDate">Published: {{news.publishedDate | date:'medium'}}</p>
+                
+                <p *ngIf="news.source" style="font-size: 13px; color: #666;">Source: {{news.source}}</p>
+                
+                <a *ngIf="news.url" [href]="news.url" target="_blank" class="news-link">Read more</a>
+                <a *ngIf="news.content?.url" [href]="news.content.url" target="_blank" class="news-link">Read more</a>
+                
+                <hr *ngIf="i < showNews.length - 1">
+              </div>
+            </div>
+            <div *ngIf="!showNews || showNews.length === 0">
+              <p style="color: #666; font-size: 14px; margin-top: 20px;">No news available for this ticker.</p>
+              <p style="font-size: 14px; color: #666;">You can find the latest news by visiting:</p>
+              <ul>
+                <li><a [href]="'https://finance.yahoo.com/quote/' + getSignalModel[companySelect]?.result?.ticker + '/news'" target="_blank">Yahoo Finance</a></li>
+                <li><a [href]="'https://www.marketwatch.com/investing/stock/' + getSignalModel[companySelect]?.result?.ticker" target="_blank">MarketWatch</a></li>
+                <li><a [href]="'https://www.reuters.com/markets/companies/' + getSignalModel[companySelect]?.result?.ticker" target="_blank">Reuters</a></li>
+              </ul>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="FA Report">
+          <div class="analysis-box">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Earnings Growth</td>
+                  <td>{{getSignalModel[companySelect].result.fundamental_analysis.earnings_growth}}%</td>
+                </tr>
+                <tr>
+                  <td>Debt to Equity</td>
+                  <td>{{getSignalModel[companySelect].result.fundamental_analysis.debt_to_equity}}</td>
+                </tr>
+                <tr>
+                  <td>P/E ratio</td>
+                  <td>{{getSignalModel[companySelect].result.fundamental_analysis.pe_ratio}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <button class="prev-nxt-btn" (click)="openPopup(getSignalModel[companySelect].result.fundamental_analysis)">Show More...</button>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+
+  <!-- Back to Smart Trade button moved below the table -->
+  <div class="back-btn-container">
+    <button class="back-to-smart-trade-btn" routerLink="/tools">Back to Smart Trade</button>
+  </div>
+</div>

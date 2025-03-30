@@ -1,0 +1,70 @@
+<div class="chart-container">
+  <div class="chart-header">
+    <div class="chart-title" *ngIf="stockData?.symbol">
+      {{ stockData?.name || stockData?.symbol }} Chart
+      <span class="timeframe-label">{{ timeframe }}</span>
+      <span class="currency-label" *ngIf="stockData?.currency">
+        ({{ stockData?.currency }})
+      </span>
+    </div>
+    
+    <div class="chart-controls">
+      <div class="timeframe-selector">
+        <button class="timeframe-btn" [class.active]="timeframe === '1d'" (click)="onTimeframeChange('1d')">1D</button>
+        <button class="timeframe-btn" [class.active]="timeframe === '1w'" (click)="onTimeframeChange('1w')">1W</button>
+        <button class="timeframe-btn" [class.active]="timeframe === '1m'" (click)="onTimeframeChange('1m')">1M</button>
+        <button class="timeframe-btn" [class.active]="timeframe === '3m'" (click)="onTimeframeChange('3m')">3M</button>
+        <button class="timeframe-btn" [class.active]="timeframe === '6m'" (click)="onTimeframeChange('6m')">6M</button>
+        <button class="timeframe-btn" [class.active]="timeframe === '1y'" (click)="onTimeframeChange('1y')">1Y</button>
+        <button class="timeframe-btn" [class.active]="timeframe === '5y'" (click)="onTimeframeChange('5y')">5Y</button>
+      </div>
+      
+      <div class="chart-type-selector">
+        <button class="chart-type-btn" [class.active]="chartType === 'line'" (click)="onChartTypeChange('line')" title="Line Chart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+        </button>
+        <button class="chart-type-btn" [class.active]="chartType === 'candlestick'" (click)="onChartTypeChange('candlestick')" title="Candlestick Chart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </button>
+        <button class="chart-type-btn" [class.active]="chartType === 'ohlc'" (click)="onChartTypeChange('ohlc')" title="OHLC Chart">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="chart-content">
+    <div *ngIf="isLoading" class="chart-loading">
+      <app-loading-spinner></app-loading-spinner>
+      <div class="loading-text">Loading chart data...</div>
+    </div>
+    
+    <div *ngIf="error && !isLoading" class="chart-error">
+      <div class="error-icon">⚠️</div>
+      <div class="error-message">{{ error }}</div>
+      <div class="error-help" *ngIf="stockData?.exchange === 'NSE' || stockData?.currency === 'INR'">
+        This may be due to market hours or data availability for Indian stocks.
+      </div>
+    </div>
+    
+    <canvas #chartCanvas [hidden]="isLoading || error || !chart"></canvas>
+    
+    <!-- Fallback message when chart fails to render but we don't want to block tabs -->
+    <div *ngIf="!chart && !error && !isLoading" class="chart-fallback">
+      <div class="fallback-message">
+        <div class="fallback-icon">📊</div>
+        <div>Chart visualization is temporarily unavailable.</div>
+        <div class="fallback-subtitle">The data has been loaded and you can continue using other features.</div>
+      </div>
+    </div>
+  </div>
+</div>

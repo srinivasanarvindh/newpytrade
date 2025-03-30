@@ -1,0 +1,89 @@
+<div class="top-stocks-container">
+  <!-- Tab selection -->
+  <div class="index-tab-container">
+    <button class="nav-arrow left" (click)="navigateTabs('prev')" [disabled]="!canNavigatePrev()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    
+    <ul class="index-tabs">
+      <ng-container *ngFor="let tab of tabs">
+        <li [ngClass]="{'active': selectedTab === tab}" (click)="selectTab(tab)">
+          {{ getMarketDisplayName(tab) }}
+        </li>
+      </ng-container>
+    </ul>
+    
+    <button class="nav-arrow right" (click)="navigateTabs('next')" [disabled]="!canNavigateNext()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Generic Tab Content - Reusing same structure for all markets -->
+  <div class="tab-content">
+    <div *ngIf="isCurrentTabLoading()" class="loading-container">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+    
+    <div *ngIf="getErrorForCurrentTab()" class="error-container">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="error-icon">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+      <span>{{ getErrorForCurrentTab() }}</span>
+      <button class="retry-btn" (click)="reloadCurrentTab()">Retry</button>
+    </div>
+    
+    <div *ngIf="!isCurrentTabLoading() && !getErrorForCurrentTab()" class="stock-table-wrapper">
+      <table class="stock-table">
+        <thead>
+          <tr>
+            <th>Stock</th>
+            <th>Price</th>
+            <th>Change</th>
+            <th>Volume</th>
+            <th>Sector</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of getStocksForCurrentTab()">
+            <td class="name-col">
+              <div class="stock-name">
+                <a [routerLink]="['/', stock.symbol]" class="stock-link">
+                  <span class="symbol">{{ stock.symbol }}</span>
+                  <span class="company">{{ stock.company }}</span>
+                </a>
+              </div>
+            </td>
+            <td class="price-col">{{ getCurrencySymbol(selectedTab) }}{{ stock.price | number:'1.2-2' }}</td>
+            <td class="change-col" [ngClass]="getChangeClass(stock)">
+              <svg *ngIf="isChangePositive(stock)" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+              <svg *ngIf="!isChangePositive(stock)" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+              {{ stock.change | number:'1.2-2' }} ({{ stock.changePercent | number:'1.2-2' }}%)
+            </td>
+            <td class="volume-col">{{ stock.volume || 'N/A' }}</td>
+            <td class="sector-col">{{ stock.sector || 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="table-footer">
+      <a [routerLink]="['/screener']" [queryParams]="{market: selectedTab}" class="view-all">
+        View all {{ getMarketDisplayName(selectedTab) }} stocks 
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
